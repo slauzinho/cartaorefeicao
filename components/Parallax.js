@@ -57,7 +57,7 @@ export default class Parallax extends React.Component {
             raised
             name="plus"
             type="entypo"
-            color="grey"
+            color={cards[activeIndex].cardColor}
             reverse
             onPress={() => this.props.navigate('Add')}
           />

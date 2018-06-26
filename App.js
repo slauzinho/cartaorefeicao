@@ -1,32 +1,27 @@
 import React from 'react';
-import { StyleSheet, YellowBox } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import Home from './components/Home';
 import AddCard from './components/AddCard';
-import ParallaxScreen from './screens/ParallaxScreen';
 import ModalScreen from './screens/ModalScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import NoCardScreen from './screens/NoCardScreen';
 
 const MainStack = createStackNavigator(
   {
-    Home: Home,
+    Home: {
+      screen: Home,
+      headerMode: 'none',
+      header: null,
+      navigationOptions: {
+        header: null
+      }
+    },
     Add: AddCard
   },
   {
     initialRouteName: 'Home',
-    mode: 'modal',
-    headerMode: 'none',
-    navigationOptions: {
-      headerMode: 'none',
-      headerStyle: {
-        backgroundColor: '#fff'
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold'
-      }
-    },
+    headerMode: 'screen',
     cardStyle: {
       backgroundColor: 'white',
       flex: 1,
@@ -36,10 +31,29 @@ const MainStack = createStackNavigator(
   }
 );
 
-const NoCardStack = createStackNavigator({
-  Home: NoCardScreen,
-  Add: AddCard
-});
+const NoCardStack = createStackNavigator(
+  {
+    Home: {
+      screen: NoCardScreen,
+      headerMode: 'none',
+      header: null,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Add: AddCard
+  },
+  {
+    initialRouteName: 'Home',
+    headerMode: 'screen',
+    cardStyle: {
+      backgroundColor: 'white',
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center'
+    }
+  }
+);
 
 const RootStack = createStackNavigator(
   {
