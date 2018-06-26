@@ -71,6 +71,10 @@ export default class CreditCard extends Component {
             <View style={styles.cardName}>
               <Text style={styles.textNumber}>{this.props.nome}</Text>
             </View>
+            {/* <Image
+              source={require('../assets/images/cartao2.png')}
+              style={[styles.bgLogo, { width: 100, height: 50 }]}
+            /> */}
           </View>
           <View style={[styles.front, { width: 300, height: 190 }]}>
             <Image
@@ -100,6 +104,12 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     right: 0,
+    borderRadius: 8
+  },
+  bgLogo: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
     borderRadius: 8
   },
   name: {
