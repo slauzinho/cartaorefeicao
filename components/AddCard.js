@@ -23,12 +23,12 @@ export default class AddCard extends React.Component {
   static navigationOptions = {
     title: 'Adicionar Cartão',
     headerStyle: {
-      backgroundColor: '#FFF',
+      backgroundColor: '#FFF'
     },
     headerTintColor: '#000',
     headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+      fontWeight: 'bold'
+    }
   };
   state = {
     cardNumber: '',
@@ -44,7 +44,13 @@ export default class AddCard extends React.Component {
 
   async onPressValidator() {
     this.setState({ isLoading: true });
-    const { cardNumber, cardPassword, tipo, cardName, cardColor } = this.state;
+    const {
+      cardNumber,
+      cardPassword,
+      tipo,
+      cardName,
+      cardColor
+    } = this.state;
 
     if (
       isNumeric(cardNumber) &&
@@ -70,10 +76,13 @@ export default class AddCard extends React.Component {
                 })
               ).then(() => this.props.navigation.navigate('Loading'));
             } catch (error) {
-              this.setState({ message: error });
+              this.setState({ message: error, isLoading: false });
             }
           } else {
-            this.setState({ message: 'Dados do cartão invalidos.' });
+            this.setState({
+              message: 'Dados do cartão invalidos.',
+              isLoading: false
+            });
           }
         });
     }
@@ -106,6 +115,8 @@ export default class AddCard extends React.Component {
         }
       }
     }
+
+    this.setState({ isLoading: false });
     return null;
   }
 
@@ -158,7 +169,7 @@ export default class AddCard extends React.Component {
               value={this.state.cardNumber}
               maxLength={16}
               keyboardType="numeric"
-              onFocus={() => this.setState({ isFocused: false })}
+              onFocus={() => this.setState({ isFocused: false, message: null })}
               inputContainerStyle={styles.input}
               containerStyle={{ marginTop: 15 }}
               label="Numero cartão"
@@ -169,7 +180,7 @@ export default class AddCard extends React.Component {
               value={this.state.cardPassword}
               maxLength={6}
               keyboardType="numeric"
-              onFocus={() => this.setState({ isFocused: true })}
+              onFocus={() => this.setState({ isFocused: true, message: null })}
               inputContainerStyle={styles.input}
               containerStyle={{ marginTop: 15 }}
               label="CSV"

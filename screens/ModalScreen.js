@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Button, AsyncStorage } from 'react-native';
 
-const deleteItem = (item, navigation, updateState) => {
+const deleteItem = (item, navigation) => {
   AsyncStorage.removeItem(item.cardNumber).then(() => {
     /* updateState(item); */
     navigation.navigate('Loading');
@@ -9,12 +9,12 @@ const deleteItem = (item, navigation, updateState) => {
 };
 
 const ModalScreen = props => {
-  const { item, updateState } = props.navigation.state.params;
+  const { item } = props.navigation.state.params;
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <View syle={{ flex: 1, alignItem: 'center' }}>
         <Button
-          onPress={() => deleteItem(item, props.navigation, updateState)}
+          onPress={() => deleteItem(item, props.navigation)}
           title="Apagar"
           color="red"
         />

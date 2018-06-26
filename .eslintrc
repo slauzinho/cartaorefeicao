@@ -23,6 +23,9 @@
     "arrow-parens": "off",
     "function-paren-newline": "off",
     "no-restricted-globals": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "react/prop-types": ["error", { "ignore": ["navigation"] }],
+    "react/no-did-mount-set-state": "off",
+    "global-require": "off"
   }
 }

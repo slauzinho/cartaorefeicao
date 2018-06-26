@@ -2,22 +2,28 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { material } from 'react-native-typography';
+import PropTypes from 'prop-types';
 
 const CardRow = props => (
   <View style={styles.container}>
     <View style={{ flex: 0.2 }}>
-      <Icon name="credit-card" size={20} color={'grey'} />
+      <Icon name="credit-card" size={20} color="grey" />
     </View>
     <View style={{ flex: 1 }}>
       <Text style={material.body1}>{props.cardNumber}</Text>
     </View>
     <View style={{ flex: 0.2 }}>
-      <Icon name="check" size={20} color={'grey'} onPress={props.nav} />
+      <Icon name="check" size={20} color="grey" onPress={props.nav} />
     </View>
   </View>
 );
 
 export default CardRow;
+
+CardRow.propTypes = {
+  cardNumber: PropTypes.string.isRequired,
+  nav: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -3,10 +3,9 @@ import HTMLParser from 'fast-html-parser';
 import request from 'superagent';
 import qs from 'qs';
 import includes from 'lodash/includes';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, FlatList, ActivityIndicator } from 'react-native';
 import Row from './Row';
-
-// TODO: SHOULD IMPLEMENT FLATLIST !!!!!!!!!!!
 
 const reducerEdenred = (accumulator, currentValue, index) => {
   if (index === 0) {
@@ -100,6 +99,7 @@ export default class Transactions extends React.Component {
 
   async fetchEdenred() {
     this.setState({ loading: true });
+    this.props.saldo(null);
     const agent = request.agent();
     const getResult = await agent.get(
       'https://www.myedenred.pt/euroticket/pages/login.jsf'
@@ -151,6 +151,7 @@ export default class Transactions extends React.Component {
     const { cardNumber, cardPassword } = this.props;
 
     this.setState({ loading: true });
+    this.props.saldo(null);
 
     const agent = request.agent();
     await agent.get(
@@ -183,7 +184,7 @@ export default class Transactions extends React.Component {
     this.props.saldo(saldo);
   }
 
-  _keyExtractor = (item) => item.description + item.value;
+  _keyExtractor = item => item.description + item.value;
 
   _renderItem = ({ item }) => <Row {...item} />;
 
@@ -204,6 +205,13 @@ export default class Transactions extends React.Component {
     );
   }
 }
+
+Transactions.propTypes = {
+  cardNumber: PropTypes.string.isRequired,
+  cardPassword: PropTypes.string.isRequired,
+  tipo: PropTypes.string.isRequired,
+  saldo: PropTypes.func.isRequired
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,8 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import PropTypes from 'prop-types';
 import { material } from 'react-native-typography';
 import { Icon } from 'react-native-elements';
+import { withNavigation } from 'react-navigation';
 import Header from './Header';
 import Transactions from './Transactions';
 import CardCarousel from './CardCarousel';
@@ -10,7 +12,7 @@ import CardCarousel from './CardCarousel';
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 50;
 
-export default class Parallax extends React.Component {
+class Parallax extends React.Component {
   state = {
     saldo: null
   };
@@ -27,7 +29,7 @@ export default class Parallax extends React.Component {
           stickyHeaderHeight={STICKY_HEADER_HEIGHT}
           renderStickyHeader={() => (
             <View style={styles.stickySection}>
-              <Text style={material.headline}>{'Saldo:'}</Text>
+              <Text style={material.headline}>Saldo:</Text>
 
               <Text style={material.headline}>{this.state.saldo}</Text>
             </View>
@@ -37,8 +39,6 @@ export default class Parallax extends React.Component {
               <CardCarousel
                 changeIndex={this.props.changeIndex}
                 cards={this.props.cards}
-                navigate={this.props.navigate}
-                updateState={this.props.updateState}
               />
             </Header>
           )}
@@ -59,13 +59,28 @@ export default class Parallax extends React.Component {
             type="entypo"
             color={cards[activeIndex].cardColor}
             reverse
-            onPress={() => this.props.navigate('Add')}
+            onPress={() => this.props.navigation.navigate('Add')}
           />
         </View>
       </View>
     );
   }
 }
+
+export default withNavigation(Parallax);
+
+Parallax.propTypes = {
+  cards: PropTypes.arrayOf(
+    PropTypes.shape({
+      cardNumber: PropTypes.string.isRequired,
+      cardPassword: PropTypes.string.isRequired,
+      cardColor: PropTypes.string.isRequired,
+      cardName: PropTypes.string.isRequired
+    }).isRequired
+  ).isRequired,
+  activeIndex: PropTypes.number.isRequired,
+  changeIndex: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   stickySection: {

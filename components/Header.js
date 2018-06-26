@@ -7,7 +7,7 @@ const Header = props => (
   <View style={styles.header}>
     <View style={{ flex: 1 }}>{props.children}</View>
     <View style={styles.textContainer}>
-      <Text style={material.headline}>{'Saldo:'}</Text>
+      <Text style={material.headline}>Saldo:</Text>
       <Text style={material.headline}>{props.saldo}</Text>
     </View>
   </View>

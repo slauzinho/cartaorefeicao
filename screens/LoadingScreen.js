@@ -1,5 +1,5 @@
-import React from "react";
-import { ActivityIndicator, AsyncStorage } from "react-native";
+import React from 'react';
+import { ActivityIndicator, AsyncStorage } from 'react-native';
 
 export default class LoadingScreen extends React.Component {
   constructor(props) {
@@ -8,7 +8,6 @@ export default class LoadingScreen extends React.Component {
   }
   _fetchCards = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    console.log(keys);
     this.props.navigation.navigate(keys.length !== 0 ? 'App' : 'EmptyState');
   };
   render() {

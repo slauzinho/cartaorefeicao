@@ -1,10 +1,7 @@
-/* eslint-disable */
-
-import React from 'react';
-const { PropTypes, Component } = React;
-
+import React, { Component } from 'react';
 import FlipCard from 'react-native-flip-card';
-import { View,  Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import PropTypes from 'prop-types';
 import frontCard from '../assets/images/front2.png';
 
 export default class CreditCard extends Component {
@@ -34,9 +31,9 @@ export default class CreditCard extends Component {
     while (string.length < 16) {
       string += '•';
     }
-    for (let i = 1; i <= 3; i++) {
-      let space_index = i * 4 + (i - 1);
-      string = string.slice(0, space_index) + ' ' + string.slice(space_index);
+    for (let i = 1; i <= 3; i += 1) {
+      const spaceIndex = (i * 4) + (i - 1);
+      string = string.slice(0, spaceIndex) + ' ' + string.slice(spaceIndex);
     }
 
     return string;
@@ -56,9 +53,9 @@ export default class CreditCard extends Component {
           ]}
           friction={6}
           perspective={1000}
-          flipHorizontal={true}
+          flipHorizontal
           flipVertical={false}
-          clickable={true}
+          clickable
           flip={this.props.focused === true}
         >
           <View style={[styles.front, { width: 300, height: 190 }]}>
@@ -71,9 +68,9 @@ export default class CreditCard extends Component {
                 <Text style={styles.textNumber}>{this.getValue('number')}</Text>
               </View>
             </View>
-              <View style={styles.cardName}>
-                <Text style={styles.textNumber}>{this.props.nome}</Text>
-              </View>
+            <View style={styles.cardName}>
+              <Text style={styles.textNumber}>{this.props.nome}</Text>
+            </View>
           </View>
           <View style={[styles.front, { width: 300, height: 190 }]}>
             <Image
@@ -147,16 +144,20 @@ const styles = StyleSheet.create({
 CreditCard.defaultProps = {
   number: null,
   cvc: null,
-  name: '',
-  expiry: '',
   focused: null,
-  expiryBefore: 'month/year',
-  expiryAfter: 'valid thru',
-  shinyAfterBack: '',
-  type: null,
-  width: 300,
-  height: 180,
   bgColor: '#F57A7A',
-  clickable: true,
-  nome: 'Cartão'
+  nome: '',
+  children: null
+};
+
+CreditCard.propTypes = {
+  number: PropTypes.string,
+  cvc: PropTypes.string,
+  nome: PropTypes.string,
+  bgColor: PropTypes.string,
+  focused: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
