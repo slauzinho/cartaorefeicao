@@ -184,7 +184,12 @@ export default class Transactions extends React.Component {
     this.props.saldo(saldo);
   }
 
-  _keyExtractor = item => item.description + item.value;
+  componentWillUnmount() {
+    this.dataSource = null;
+    this.loading = false;
+  }
+
+  _keyExtractor = item => item.description + item.value + item.date;
 
   _renderItem = ({ item }) => <Row {...item} />;
 
