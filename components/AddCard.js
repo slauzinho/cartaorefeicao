@@ -42,6 +42,18 @@ export default class AddCard extends React.Component {
     isLoading: false
   };
 
+  componentWillUnmount() {
+    this.cardNumber = '';
+    this.cardPassword = '';
+    this.tipo = 'santander';
+    this.isFocused = false;
+    this.isVisible = false;
+    this.message = null;
+    this.cardName = '';
+    this.cardColor = '#F57A7A';
+    this.isLoading = false;
+  }
+
   async onPressValidator() {
     this.setState({ isLoading: true });
     const {
@@ -118,18 +130,6 @@ export default class AddCard extends React.Component {
 
     this.setState({ isLoading: false });
     return null;
-  }
-
-  componentWillUnmount() {
-    this.cardNumber = '';
-    this.cardPassword = '';
-    this.tipo = 'santander';
-    this.isFocused = false;
-    this.isVisible = false;
-    this.message = null;
-    this.cardName = '';
-    this.cardColor = '#F57A7A';
-    this.isLoading = false;
   }
 
   render() {

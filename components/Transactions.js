@@ -97,6 +97,11 @@ export default class Transactions extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.dataSource = null;
+    this.loading = false;
+  }
+
   async fetchEdenred() {
     this.setState({ loading: true });
     this.props.saldo(null);
@@ -182,11 +187,6 @@ export default class Transactions extends React.Component {
       dataSource: transactions
     });
     this.props.saldo(saldo);
-  }
-
-  componentWillUnmount() {
-    this.dataSource = null;
-    this.loading = false;
   }
 
   _keyExtractor = item => item.description + item.value + item.date;
