@@ -8,6 +8,7 @@ import { withNavigation } from 'react-navigation';
 import Header from './Header';
 import Transactions from './Transactions';
 import CardCarousel from './CardCarousel';
+import TransactionsList from './TransactionsList';
 
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 50;
@@ -30,7 +31,6 @@ class Parallax extends React.Component {
           renderStickyHeader={() => (
             <View style={styles.stickySection}>
               <Text style={material.headline}>Saldo:</Text>
-
               <Text style={material.headline}>{this.state.saldo}</Text>
             </View>
           )}
@@ -49,6 +49,9 @@ class Parallax extends React.Component {
               cardPassword={cards[activeIndex].cardPassword}
               saldo={this._changeSaldo}
               tipo={cards[activeIndex].tipo}
+              render={({ dataSource, loading }) => (
+                <TransactionsList dataSource={dataSource} loading={loading} />
+              )}
             />
           </View>
         </ParallaxScrollView>
@@ -79,7 +82,7 @@ Parallax.propTypes = {
     }).isRequired
   ).isRequired,
   activeIndex: PropTypes.number.isRequired,
-  changeIndex: PropTypes.func.isRequired,
+  changeIndex: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

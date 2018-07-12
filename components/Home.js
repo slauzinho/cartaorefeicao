@@ -35,13 +35,6 @@ export default class Home extends React.Component {
 
   _changeIndex = index => this.setState({ activeIndex: index });
 
-  updateState = number => {
-    const cards = this.state.cards.filter(
-      card => card.cardNumber !== number.cardNumber
-    );
-    this.setState({ cards, activeIndex: 0 });
-  };
-
   _renderCardsState = () => (
     <Parallax
       cards={this.state.cards}

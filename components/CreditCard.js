@@ -106,12 +106,6 @@ const styles = StyleSheet.create({
     right: 0,
     borderRadius: 8
   },
-  bgLogo: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    borderRadius: 8
-  },
   name: {
     flex: 2,
     paddingTop: 40,

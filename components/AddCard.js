@@ -54,7 +54,7 @@ export default class AddCard extends React.Component {
     this.isLoading = false;
   }
 
-  async onPressValidator() {
+  async handlePress() {
     this.setState({ isLoading: true });
     const {
       cardNumber,
@@ -234,7 +234,7 @@ export default class AddCard extends React.Component {
               loading={this.state.isLoading}
               disabled={this.state.isLoading}
               onPress={() =>
-                this.onPressValidator(
+                this.handlePress(
                   this.state.cardNumber,
                   this.state.cardPassword,
                   this.state.tipo
