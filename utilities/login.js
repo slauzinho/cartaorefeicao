@@ -39,5 +39,65 @@ export const loginSantander = async (cardNumber, cardPassword) => {
     'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
   );
 
-  return getResult;
+  return getResult.text;
+};
+
+export const reducerSantander = (accumulator, currentValue, index) => {
+  if (index === 0) {
+    return { ...accumulator, date: currentValue.removeWhitespace().text };
+  }
+  if (index === 1) {
+    return accumulator;
+  }
+  if (index === 2) {
+    return {
+      ...accumulator,
+      description: !isNaN(
+        parseFloat(currentValue.removeWhitespace().text.slice(0, 6))
+      )
+        ? currentValue.removeWhitespace().text.slice(15)
+        : currentValue.removeWhitespace().text
+    };
+  }
+  return {
+    ...accumulator,
+    value: currentValue.removeWhitespace().text.slice(0, -4) + '€'
+  };
+};
+
+
+export const reducerEdenred = (accumulator, currentValue, index) => {
+  if (index === 0) {
+    return { ...accumulator, date: currentValue.removeWhitespace().text };
+  }
+
+  if (index === 3) {
+    return {
+      ...accumulator,
+      description: currentValue.removeWhitespace().text
+    };
+  }
+
+  if (index === 4) {
+    const debit = currentValue
+      .removeWhitespace()
+      .text.slice(0, -2)
+      .replace(',', '.');
+
+    return {
+      ...accumulator,
+      value: `${0 - debit}€`
+    };
+  }
+
+  if (index === 5) {
+    if (currentValue.removeWhitespace().text === '0,00 €') {
+      return accumulator;
+    }
+    return {
+      ...accumulator,
+      value: `${currentValue.removeWhitespace().text.slice(0, -2)}€`
+    };
+  }
+  return accumulator;
 };
