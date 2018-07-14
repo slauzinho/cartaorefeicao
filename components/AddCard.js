@@ -55,6 +55,8 @@ export default class AddCard extends React.Component {
   }
 
   async handlePress() {
+    if (this.isLoading) { return null; }
+
     this.setState({ isLoading: true });
     const {
       cardNumber,
