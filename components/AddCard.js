@@ -55,7 +55,9 @@ export default class AddCard extends React.Component {
   }
 
   async handlePress() {
-    if (this.isLoading) { return null; }
+    if (this.isLoading) {
+      return null;
+    }
 
     this.setState({ isLoading: true });
     const {
@@ -197,17 +199,21 @@ export default class AddCard extends React.Component {
               onFocus={() => this.setState({ isFocused: true, message: null })}
               inputContainerStyle={styles.input}
               containerStyle={{ marginTop: 15 }}
-              label="CSV"
+              label={this.state.tipo === 'edenred' ? 'Password' : 'CSV'}
               rightIcon={
-                <Icon
-                  name="info-circle"
-                  size={24}
-                  color="grey"
-                  onPress={() =>
-                    this.setState({ isVisible: !this.state.isVisible })
-                  }
-                  underlayColor="white"
-                />
+                this.state.tipo === 'edenred' ? (
+                  undefined
+                ) : (
+                  <Icon
+                    name="info-circle"
+                    size={24}
+                    color="grey"
+                    onPress={() =>
+                      this.setState({ isVisible: !this.state.isVisible })
+                    }
+                    underlayColor="white"
+                  />
+                )
               }
             />
             <Input
