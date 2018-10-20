@@ -1,9 +1,6 @@
-import React from 'react';
-import {
-  AsyncStorage,
-  ActivityIndicator
-} from 'react-native';
-import Parallax from './Parallax';
+import React from "react";
+import { AsyncStorage, ActivityIndicator } from "react-native";
+import Parallax from "./Parallax";
 
 export default class Home extends React.Component {
   state = {
@@ -24,8 +21,7 @@ export default class Home extends React.Component {
         )
       );
       if (cards.length > 0) {
-        const cardsWithRemovedOldEdenred = await cards.filter(card => !((card.tipo === 'edenred') && !("email" in card)));
-        this.setState({ cards: cardsWithRemovedOldEdenred, loading: false });
+        this.setState({ cards, loading: false });
       } else {
         this.setState({ loading: false });
       }

@@ -1,13 +1,7 @@
-import React from 'react';
-import HTMLParser from 'fast-html-parser';
-import PropTypes from 'prop-types';
-import {
-  loginEdenred,
-  reducerEdenred,
-  reducerSantander,
-  loginSantander,
-  loginEdenredTest
-} from '../utilities';
+import React from "react";
+import HTMLParser from "fast-html-parser";
+import PropTypes from "prop-types";
+import { loginEdenred, reducerSantander, loginSantander } from "../utilities";
 
 export default class TransactionsWrapper extends React.Component {
   constructor(props) {
@@ -19,10 +13,10 @@ export default class TransactionsWrapper extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.tipo === 'santander') {
+    if (this.props.tipo === "santander") {
       this.fetchSantander();
     }
-    if (this.props.tipo === 'edenred') {
+    if (this.props.tipo === "edenred") {
       this.fetchEdenred();
     }
   }
@@ -30,10 +24,10 @@ export default class TransactionsWrapper extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.cardNumber !== this.props.cardNumber) {
       if (this.props.cardNumber !== prevProps.cardNumber) {
-        if (this.props.tipo === 'santander') {
+        if (this.props.tipo === "santander") {
           this.fetchSantander();
         }
-        if (this.props.tipo === 'edenred') {
+        if (this.props.tipo === "edenred") {
           this.fetchEdenred();
         }
       }
@@ -49,7 +43,11 @@ export default class TransactionsWrapper extends React.Component {
     this.setState({ loading: true });
     this.props.saldo(null);
     const { cardNumber, cardPassword, email } = this.props;
-    const {saldo, transactions} = await loginEdenredTest(cardNumber, cardPassword, email);
+    const { saldo, transactions } = await loginEdenred(
+      cardNumber,
+      cardPassword,
+      email
+    );
 
     this.setState({
       loading: false,
@@ -67,19 +65,19 @@ export default class TransactionsWrapper extends React.Component {
     const postResult = await loginSantander(cardNumber, cardPassword);
     const root = HTMLParser.parse(postResult);
     const transactions = root
-      .querySelectorAll('table.trans')[1]
-      .querySelector('tbody')
-      .querySelectorAll('tr')
+      .querySelectorAll("table.trans")[1]
+      .querySelector("tbody")
+      .querySelectorAll("tr")
       .slice(1)
-      .map(tr => tr.querySelectorAll('td').reduce(reducerSantander, {}));
+      .map(tr => tr.querySelectorAll("td").reduce(reducerSantander, {}));
     const saldo =
       root
-        .querySelector('table.trans')
-        .querySelector('tbody')
-        .querySelectorAll('tr')[1]
-        .querySelectorAll('td')[2]
-        .querySelector('b')
-        .text.slice(0, -4) + '€';
+        .querySelector("table.trans")
+        .querySelector("tbody")
+        .querySelectorAll("tr")[1]
+        .querySelectorAll("td")[2]
+        .querySelector("b")
+        .text.slice(0, -4) + "€";
     this.setState({
       loading: false,
       dataSource: transactions

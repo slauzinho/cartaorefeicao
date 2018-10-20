@@ -1,12 +1,9 @@
-import HTMLParser from "fast-html-parser";
 import request from "superagent";
-import qs from "qs";
 import _ from "lodash";
 import axios from "axios";
 import moment from 'moment';
 
-export const loginEdenredTest = async (cardNumber, password, email) => {
-  console.log(cardNumber, password, email);
+export const loginEdenred = async (cardNumber, password, email) => {
   const postData = {
     userId: email,
     password,
@@ -32,7 +29,6 @@ export const loginEdenredTest = async (cardNumber, password, email) => {
       }
       var {data: {data: {token}}} = await axios(config);
   } catch(err) {
-    console.log(err);
     throw "Login invalido";
   }
 
@@ -73,33 +69,6 @@ export const loginEdenredTest = async (cardNumber, password, email) => {
   return {saldo: (availableBalance + "€").replace('.', ','), transactions: transactionParsed}
 };
 
-export const loginEdenred = async (cardNumber, cardPassword) => {
-  const agent = request.agent();
-  const getResult = await agent.get(
-    "https://www.myedenred.pt/euroticket/pages/login.jsf"
-  );
-  const root = HTMLParser.parse(getResult.text);
-  const java = root
-    .querySelectorAll("input")
-    .filter(element => _.includes(element.id, "j_id1:javax.faces.ViewState"));
-  const javaParam = java[0].attributes.value;
-  const payload = {
-    "javax.faces.ViewState": javaParam,
-    loginform: "loginform",
-    "loginform:username": cardNumber,
-    "loginform:password": cardPassword,
-    "loginform:loginButton": "Entrar"
-  };
-
-  const urlEncoded = qs.stringify(payload);
-
-  const postResult = await agent
-    .post("https://www.myedenred.pt/euroticket/pages/login.jsf")
-    .send(urlEncoded);
-
-  return postResult.text;
-};
-
 export const loginSantander = async (cardNumber, cardPassword) => {
   const agent = request.agent();
   await agent.get(
@@ -135,38 +104,3 @@ export const reducerSantander = (accumulator, currentValue, index) => {
   };
 };
 
-export const reducerEdenred = (accumulator, currentValue, index) => {
-  if (index === 0) {
-    return { ...accumulator, date: currentValue.removeWhitespace().text };
-  }
-
-  if (index === 3) {
-    return {
-      ...accumulator,
-      description: currentValue.removeWhitespace().text
-    };
-  }
-
-  if (index === 4) {
-    const debit = currentValue
-      .removeWhitespace()
-      .text.slice(0, -2)
-      .replace(",", ".");
-
-    return {
-      ...accumulator,
-      value: `${0 - debit}€`
-    };
-  }
-
-  if (index === 5) {
-    if (currentValue.removeWhitespace().text === "0,00 €") {
-      return accumulator;
-    }
-    return {
-      ...accumulator,
-      value: `${currentValue.removeWhitespace().text.slice(0, -2)}€`
-    };
-  }
-  return accumulator;
-};
