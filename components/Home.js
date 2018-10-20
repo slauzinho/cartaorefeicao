@@ -24,7 +24,8 @@ export default class Home extends React.Component {
         )
       );
       if (cards.length > 0) {
-        this.setState({ cards, loading: false });
+        const cardsWithRemovedOldEdenred = await cards.filter(card => !((card.tipo === 'edenred') && !("email" in card)));
+        this.setState({ cards: cardsWithRemovedOldEdenred, loading: false });
       } else {
         this.setState({ loading: false });
       }

@@ -47,6 +47,7 @@ class Parallax extends React.Component {
             <Transactions
               cardNumber={cards[activeIndex].cardNumber}
               cardPassword={cards[activeIndex].cardPassword}
+              email={cards[activeIndex].email}
               saldo={this._changeSaldo}
               tipo={cards[activeIndex].tipo}
               render={({ dataSource, loading }) => (

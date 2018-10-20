@@ -15,7 +15,7 @@ import { Input, Overlay, Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CreditCard from './CreditCard';
-import { loginEdenred } from '../utilities/login';
+import { loginEdenredTest } from '../utilities/login';
 
 const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
 
@@ -39,7 +39,8 @@ export default class AddCard extends React.Component {
     message: null,
     cardName: '',
     cardColor: '#F57A7A',
-    isLoading: false
+    isLoading: false,
+    email: ''
   };
 
   componentWillUnmount() {
@@ -65,7 +66,8 @@ export default class AddCard extends React.Component {
       cardPassword,
       tipo,
       cardName,
-      cardColor
+      cardColor,
+      email
     } = this.state;
 
     if (
@@ -104,18 +106,11 @@ export default class AddCard extends React.Component {
     }
     if (
       isNumeric(cardNumber) &&
-      isNumeric(cardPassword) &&
+      email !== '' &&
       tipo === 'edenred'
     ) {
-      const results = await loginEdenred(cardNumber, cardPassword);
-      const root = HTMLParser.parse(results);
-
-      const loginFailed = root.querySelector('span.rf-msgs-sum');
-
-      if (loginFailed) {
-        this.setState({ message: 'Dados do cartão invalidos.' });
-      } else {
         try {
+          await loginEdenredTest(cardNumber, cardPassword, email);
           AsyncStorage.setItem(
             cardNumber,
             JSON.stringify({
@@ -123,13 +118,14 @@ export default class AddCard extends React.Component {
               cardPassword,
               tipo,
               cardName,
-              cardColor
+              cardColor,
+              email
             })
           ).then(() => this.props.navigation.navigate('Loading'));
         } catch (error) {
           this.setState({ message: error });
         }
-      }
+      
     }
 
     this.setState({ isLoading: false });
@@ -147,6 +143,7 @@ export default class AddCard extends React.Component {
               focused={this.state.isFocused}
               bgColor={this.state.cardColor}
               nome={this.state.cardName}
+              clickable={!(this.state.tipo === 'edenred')}
             />
             <Picker
               selectedValue={this.state.tipo}
@@ -179,6 +176,22 @@ export default class AddCard extends React.Component {
                 onPress={() => this.setState({ cardColor: '#A3A3A3' })}
               />
             </View>
+            {this.state.tipo === 'edenred' ? <Input
+              placeholder="examplo@mail.com"
+              onChangeText={email => this.setState({ email })}
+              value={this.state.email}
+              inputContainerStyle={styles.input}
+              containerStyle={{ marginTop: 15 }}
+              label="Email"
+            /> : <View></View>}
+            {this.state.tipo === 'edenred' ? <Input
+              placeholder="**********"
+              onChangeText={cardPassword => this.setState({ cardPassword })}
+              value={this.state.cardPassword}
+              inputContainerStyle={styles.input}
+              containerStyle={{ marginTop: 15 }}
+              label='Password'
+            /> : <View></View>}
             <Input
               placeholder="XXXX XXXX XXXX XXXX"
               onChangeText={cardNumber => this.setState({ cardNumber })}
@@ -190,7 +203,7 @@ export default class AddCard extends React.Component {
               containerStyle={{ marginTop: 15 }}
               label="Numero cartão"
             />
-            <Input
+            {this.state.tipo === 'santander' ? <Input
               placeholder="XXX XXX"
               onChangeText={cardPassword => this.setState({ cardPassword })}
               value={this.state.cardPassword}
@@ -199,11 +212,8 @@ export default class AddCard extends React.Component {
               onFocus={() => this.setState({ isFocused: true, message: null })}
               inputContainerStyle={styles.input}
               containerStyle={{ marginTop: 15 }}
-              label={this.state.tipo === 'edenred' ? 'Password' : 'CSV'}
+              label={'CSV'}
               rightIcon={
-                this.state.tipo === 'edenred' ? (
-                  undefined
-                ) : (
                   <Icon
                     name="info-circle"
                     size={24}
@@ -213,9 +223,8 @@ export default class AddCard extends React.Component {
                     }
                     underlayColor="white"
                   />
-                )
-              }
-            />
+                }
+            /> : <View></View>}
             <Input
               placeholder="Nome opcional para o seu cartão"
               onChangeText={cardName => this.setState({ cardName })}

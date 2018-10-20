@@ -3,7 +3,6 @@ import { View, Button, AsyncStorage, Image } from 'react-native';
 
 const deleteItem = (item, navigation) => {
   AsyncStorage.removeItem(item.cardNumber).then(() => {
-    /* updateState(item); */
     navigation.navigate('Loading');
   });
 };

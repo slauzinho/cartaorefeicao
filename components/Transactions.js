@@ -5,7 +5,8 @@ import {
   loginEdenred,
   reducerEdenred,
   reducerSantander,
-  loginSantander
+  loginSantander,
+  loginEdenredTest
 } from '../utilities';
 
 export default class TransactionsWrapper extends React.Component {
@@ -47,24 +48,8 @@ export default class TransactionsWrapper extends React.Component {
   async fetchEdenred() {
     this.setState({ loading: true });
     this.props.saldo(null);
-    const { cardNumber, cardPassword } = this.props;
-    const postResult = await loginEdenred(cardNumber, cardPassword);
-    const root = HTMLParser.parse(postResult);
-
-    const saldo = root
-      .querySelector('table.balance')
-      .querySelector('tbody')
-      .querySelectorAll('tr')[1]
-      .querySelector('td')
-      .querySelector('table')
-      .querySelector('tbody')
-      .querySelector('tr')
-      .querySelectorAll('td')[1].text;
-
-    const transactions = root
-      .querySelector('tbody.rf-dt-b')
-      .querySelectorAll('tr')
-      .map(tr => tr.querySelectorAll('td').reduce(reducerEdenred, {}));
+    const { cardNumber, cardPassword, email } = this.props;
+    const {saldo, transactions} = await loginEdenredTest(cardNumber, cardPassword, email);
 
     this.setState({
       loading: false,
@@ -95,7 +80,6 @@ export default class TransactionsWrapper extends React.Component {
         .querySelectorAll('td')[2]
         .querySelector('b')
         .text.slice(0, -4) + '€';
-
     this.setState({
       loading: false,
       dataSource: transactions

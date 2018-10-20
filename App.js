@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import Home from './components/Home';
 import AddCard from './components/AddCard';
 import ModalScreen from './screens/ModalScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import NoCardScreen from './screens/NoCardScreen';
+
+import { loginEdenredTest } from './utilities';
 
 const MainStack = createStackNavigator(
   {

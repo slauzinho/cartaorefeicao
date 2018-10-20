@@ -55,7 +55,7 @@ export default class CreditCard extends Component {
           perspective={1000}
           flipHorizontal
           flipVertical={false}
-          clickable
+          clickable={this.props.clickable}
           flip={this.props.focused === true}
         >
           <View style={[styles.front, { width: 300, height: 190 }]}>
@@ -151,7 +151,8 @@ CreditCard.defaultProps = {
   focused: null,
   bgColor: '#F57A7A',
   nome: '',
-  children: null
+  children: null,
+  clickable: true,
 };
 
 CreditCard.propTypes = {
@@ -163,5 +164,6 @@ CreditCard.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ])
+  ]),
+  clickable: PropTypes.bool,
 };

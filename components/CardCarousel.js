@@ -11,7 +11,7 @@ function renderItem({ item }, navigate) {
     <View>
       <CreditCard
         number={item.cardNumber}
-        cvc={item.cardPassword}
+        cvc={item.tipo === 'edenred' ? '' : item.cardPassword}
         bgColor={item.cardColor}
         nome={item.cardName}
       >
