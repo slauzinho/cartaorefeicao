@@ -1,6 +1,6 @@
-import React from 'react';
-import axios from 'axios';
-import HTMLParser from 'fast-html-parser';
+import React from "react";
+import axios from "axios";
+import HTMLParser from "fast-html-parser";
 import {
   StyleSheet,
   Text,
@@ -10,48 +10,48 @@ import {
   Picker,
   TouchableOpacity,
   ScrollView
-} from 'react-native';
-import { Input, Overlay, Button } from 'react-native-elements';
-import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import CreditCard from './CreditCard';
-import { loginEdenredTest } from '../utilities/login';
+} from "react-native";
+import { Input, Overlay, Button, Badge } from "react-native-elements";
+import PropTypes from "prop-types";
+import Icon from "react-native-vector-icons/FontAwesome";
+import CreditCard from "./CreditCard";
+import { loginEdenred } from "../utilities/login";
 
 const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
 
 export default class AddCard extends React.Component {
   static navigationOptions = {
-    title: 'Adicionar Cartão',
+    title: "Adicionar Cartão",
     headerStyle: {
-      backgroundColor: '#FFF'
+      backgroundColor: "#FFF"
     },
-    headerTintColor: '#000',
+    headerTintColor: "#000",
     headerTitleStyle: {
-      fontWeight: 'bold'
+      fontWeight: "bold"
     }
   };
   state = {
-    cardNumber: '',
-    cardPassword: '',
-    tipo: 'santander',
+    cardNumber: "",
+    cardPassword: "",
+    tipo: "santander",
     isFocused: false,
     isVisible: false,
     message: null,
-    cardName: '',
-    cardColor: '#F57A7A',
+    cardName: "",
+    cardColor: "#F57A7A",
     isLoading: false,
-    email: ''
+    email: ""
   };
 
   componentWillUnmount() {
-    this.cardNumber = '';
-    this.cardPassword = '';
-    this.tipo = 'santander';
+    this.cardNumber = "";
+    this.cardPassword = "";
+    this.tipo = "santander";
     this.isFocused = false;
     this.isVisible = false;
     this.message = null;
-    this.cardName = '';
-    this.cardColor = '#F57A7A';
+    this.cardName = "";
+    this.cardColor = "#F57A7A";
     this.isLoading = false;
   }
 
@@ -73,7 +73,7 @@ export default class AddCard extends React.Component {
     if (
       isNumeric(cardNumber) &&
       isNumeric(cardPassword) &&
-      tipo === 'santander'
+      tipo === "santander"
     ) {
       axios
         .get(
@@ -92,40 +92,35 @@ export default class AddCard extends React.Component {
                   cardName,
                   cardColor
                 })
-              ).then(() => this.props.navigation.navigate('Loading'));
+              ).then(() => this.props.navigation.navigate("Loading"));
             } catch (error) {
               this.setState({ message: error, isLoading: false });
             }
           } else {
             this.setState({
-              message: 'Dados do cartão invalidos.',
+              message: "Dados errados",
               isLoading: false
             });
           }
         });
     }
-    if (
-      isNumeric(cardNumber) &&
-      email !== '' &&
-      tipo === 'edenred'
-    ) {
-        try {
-          await loginEdenredTest(cardNumber, cardPassword, email);
-          AsyncStorage.setItem(
+    if (isNumeric(cardNumber) && email !== "" && tipo === "edenred") {
+      try {
+        await loginEdenred(cardNumber, cardPassword, email);
+        AsyncStorage.setItem(
+          cardNumber,
+          JSON.stringify({
             cardNumber,
-            JSON.stringify({
-              cardNumber,
-              cardPassword,
-              tipo,
-              cardName,
-              cardColor,
-              email
-            })
-          ).then(() => this.props.navigation.navigate('Loading'));
-        } catch (error) {
-          this.setState({ message: error });
-        }
-      
+            cardPassword,
+            tipo,
+            cardName,
+            cardColor,
+            email
+          })
+        ).then(() => this.props.navigation.navigate("Loading"));
+      } catch (error) {
+        this.setState({ message: error });
+      }
     }
 
     this.setState({ isLoading: false });
@@ -136,62 +131,70 @@ export default class AddCard extends React.Component {
     return (
       <View style={{ flex: 1, paddingTop: 15 }}>
         <ScrollView>
-          <View style={{ flex: 1, alignItems: 'center' }}>
+          <View style={{ flex: 1, alignItems: "center" }}>
             <CreditCard
               number={this.state.cardNumber}
               cvc={this.state.cardPassword}
               focused={this.state.isFocused}
               bgColor={this.state.cardColor}
               nome={this.state.cardName}
-              clickable={!(this.state.tipo === 'edenred')}
+              clickable={!(this.state.tipo === "edenred")}
             />
             <Picker
               selectedValue={this.state.tipo}
-              style={{ height: 50, width: 300, color: '#86899E' }}
+              style={{ height: 50, width: 300, color: "#86899E" }}
               onValueChange={itemValue => this.setState({ tipo: itemValue })}
-              itemStyle={{ fontWeight: 'bold', fontSize: 300 }}
+              itemStyle={{ fontWeight: "bold", fontSize: 300 }}
             >
               <Picker.Item label="Santander" value="santander" />
               <Picker.Item label="Euroticket - Edenred" value="edenred" />
             </Picker>
             <View style={styles.circles}>
               <TouchableOpacity
-                style={[styles.circle, { backgroundColor: '#F57A7A' }]}
-                onPress={() => this.setState({ cardColor: '#F57A7A' })}
+                style={[styles.circle, { backgroundColor: "#F57A7A" }]}
+                onPress={() => this.setState({ cardColor: "#F57A7A" })}
               />
               <TouchableOpacity
-                style={[styles.circle, { backgroundColor: '#5CB15A' }]}
-                onPress={() => this.setState({ cardColor: '#5CB15A' })}
+                style={[styles.circle, { backgroundColor: "#5CB15A" }]}
+                onPress={() => this.setState({ cardColor: "#5CB15A" })}
               />
               <TouchableOpacity
-                style={[styles.circle, { backgroundColor: '#2D5B99' }]}
-                onPress={() => this.setState({ cardColor: '#2D5B99' })}
+                style={[styles.circle, { backgroundColor: "#2D5B99" }]}
+                onPress={() => this.setState({ cardColor: "#2D5B99" })}
               />
               <TouchableOpacity
-                style={[styles.circle, { backgroundColor: '#F0C41B' }]}
-                onPress={() => this.setState({ cardColor: '#F0C41B' })}
+                style={[styles.circle, { backgroundColor: "#F0C41B" }]}
+                onPress={() => this.setState({ cardColor: "#F0C41B" })}
               />
               <TouchableOpacity
-                style={[styles.circle, { backgroundColor: '#A3A3A3' }]}
-                onPress={() => this.setState({ cardColor: '#A3A3A3' })}
+                style={[styles.circle, { backgroundColor: "#A3A3A3" }]}
+                onPress={() => this.setState({ cardColor: "#A3A3A3" })}
               />
             </View>
-            {this.state.tipo === 'edenred' ? <Input
-              placeholder="examplo@mail.com"
-              onChangeText={email => this.setState({ email })}
-              value={this.state.email}
-              inputContainerStyle={styles.input}
-              containerStyle={{ marginTop: 15 }}
-              label="Email"
-            /> : <View></View>}
-            {this.state.tipo === 'edenred' ? <Input
-              placeholder="**********"
-              onChangeText={cardPassword => this.setState({ cardPassword })}
-              value={this.state.cardPassword}
-              inputContainerStyle={styles.input}
-              containerStyle={{ marginTop: 15 }}
-              label='Password'
-            /> : <View></View>}
+            {this.state.tipo === "edenred" ? (
+              <Input
+                placeholder="examplo@mail.com"
+                onChangeText={email => this.setState({ email })}
+                value={this.state.email}
+                inputContainerStyle={styles.input}
+                containerStyle={{ marginTop: 15 }}
+                label="Email"
+              />
+            ) : (
+              <View />
+            )}
+            {this.state.tipo === "edenred" ? (
+              <Input
+                placeholder="**********"
+                onChangeText={cardPassword => this.setState({ cardPassword })}
+                value={this.state.cardPassword}
+                inputContainerStyle={styles.input}
+                containerStyle={{ marginTop: 15 }}
+                label="Password"
+              />
+            ) : (
+              <View />
+            )}
             <Input
               placeholder="XXXX XXXX XXXX XXXX"
               onChangeText={cardNumber => this.setState({ cardNumber })}
@@ -203,17 +206,20 @@ export default class AddCard extends React.Component {
               containerStyle={{ marginTop: 15 }}
               label="Numero cartão"
             />
-            {this.state.tipo === 'santander' ? <Input
-              placeholder="XXX XXX"
-              onChangeText={cardPassword => this.setState({ cardPassword })}
-              value={this.state.cardPassword}
-              maxLength={6}
-              keyboardType="numeric"
-              onFocus={() => this.setState({ isFocused: true, message: null })}
-              inputContainerStyle={styles.input}
-              containerStyle={{ marginTop: 15 }}
-              label={'CSV'}
-              rightIcon={
+            {this.state.tipo === "santander" ? (
+              <Input
+                placeholder="XXX XXX"
+                onChangeText={cardPassword => this.setState({ cardPassword })}
+                value={this.state.cardPassword}
+                maxLength={6}
+                keyboardType="numeric"
+                onFocus={() =>
+                  this.setState({ isFocused: true, message: null })
+                }
+                inputContainerStyle={styles.input}
+                containerStyle={{ marginTop: 15 }}
+                label={"CSV"}
+                rightIcon={
                   <Icon
                     name="info-circle"
                     size={24}
@@ -224,7 +230,10 @@ export default class AddCard extends React.Component {
                     underlayColor="white"
                   />
                 }
-            /> : <View></View>}
+              />
+            ) : (
+              <View />
+            )}
             <Input
               placeholder="Nome opcional para o seu cartão"
               onChangeText={cardName => this.setState({ cardName })}
@@ -236,27 +245,47 @@ export default class AddCard extends React.Component {
               label="Nome do cartão"
             />
             {this.state.message ? (
-              <Text style={styles.warning}>{this.state.message}</Text>
+              <View
+                style={{
+                  paddingHorizontal: 50,
+                  marginTop: 20,
+                  marginBottom: -15,
+                  flex: 1,
+                  flexDirection: "column",
+                  alignItems: "center"
+                }}
+              >
+                <Badge
+                  containerStyle={{
+                    backgroundColor: "red",
+                    width: 150,
+                    marginBottom: 10
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{this.state.message}</Text>
+                </Badge>
+                <Badge>
+                  <Text style={{ color: "white" }}>
+                    Se estiveres com dificuldades a adicionar um cartão consulta
+                    as instruções através do icon no topo superior direito
+                  </Text>
+                </Badge>
+              </View>
             ) : null}
             <Button
               title="ADICIONAR"
-              titleStyle={{ fontWeight: '700', color: 'grey' }}
+              titleStyle={{ fontWeight: "700", color: "grey" }}
               buttonStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 1)',
+                backgroundColor: "rgba(255, 255, 255, 1)",
                 width: 300,
-                height: 45
+                height: 45,
+                marginBottom: 60
               }}
               containerStyle={styles.button}
               loadingProps={{ color: this.state.cardColor }}
               loading={this.state.isLoading}
               disabled={this.state.isLoading}
-              onPress={() =>
-                this.handlePress(
-                  this.state.cardNumber,
-                  this.state.cardPassword,
-                  this.state.tipo
-                )
-              }
+              onPress={() => this.handlePress()}
             />
           </View>
           <Overlay
@@ -267,7 +296,7 @@ export default class AddCard extends React.Component {
             overlayStyle={styles.overlay}
             fullscreen
           >
-            <Image source={require('../assets/images/example.png')} />
+            <Image source={require("../assets/images/example.png")} />
             <Icon
               name="times"
               size={30}
@@ -288,17 +317,17 @@ export default class AddCard extends React.Component {
 
 const styles = StyleSheet.create({
   input: {
-    borderColor: 'grey',
+    borderColor: "grey",
     borderBottomWidth: 1,
     marginBottom: 5
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     right: 100,
     top: 0
   },
   close: {
-    position: 'absolute',
+    position: "absolute",
     top: -2,
     right: 0
   },
@@ -307,14 +336,14 @@ const styles = StyleSheet.create({
   },
   warning: {
     marginTop: 15,
-    color: 'rgba(255, 0, 0, .8)',
-    fontWeight: 'bold'
+    color: "rgba(255, 0, 0, .8)",
+    fontWeight: "bold"
   },
   circles: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-around',
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
     marginTop: 10,
     marginBottom: 10
   },

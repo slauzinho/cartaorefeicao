@@ -1,34 +1,34 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
-import Home from './components/Home';
-import AddCard from './components/AddCard';
-import ModalScreen from './screens/ModalScreen';
-import LoadingScreen from './screens/LoadingScreen';
-import NoCardScreen from './screens/NoCardScreen';
-
-import { loginEdenredTest } from './utilities';
+import React from "react";
+import { StyleSheet } from "react-native";
+import { createStackNavigator, createSwitchNavigator } from "react-navigation";
+import Home from "./components/Home";
+import InstructionsScreen from "./screens/InstructionsScreen";
+import ModalScreen from "./screens/ModalScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import NoCardScreen from "./screens/NoCardScreen";
+import AddCardScreen from "./screens/AddCardScreen";
 
 const MainStack = createStackNavigator(
   {
     Home: {
       screen: Home,
-      headerMode: 'none',
+      headerMode: "none",
       header: null,
       navigationOptions: {
         header: null
       }
     },
-    Add: AddCard
+    Add: AddCardScreen,
+    Help: InstructionsScreen
   },
   {
-    initialRouteName: 'Home',
-    headerMode: 'screen',
+    initialRouteName: "Home",
+    headerMode: "screen",
     cardStyle: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
       flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center'
+      flexDirection: "row",
+      justifyContent: "center"
     }
   }
 );
@@ -37,22 +37,23 @@ const NoCardStack = createStackNavigator(
   {
     Home: {
       screen: NoCardScreen,
-      headerMode: 'none',
+      headerMode: "none",
       header: null,
       navigationOptions: {
         header: null
       }
     },
-    Add: AddCard
+    Add: AddCardScreen,
+    Help: InstructionsScreen
   },
   {
-    initialRouteName: 'Home',
-    headerMode: 'screen',
+    initialRouteName: "Home",
+    headerMode: "screen",
     cardStyle: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
       flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center'
+      flexDirection: "row",
+      justifyContent: "center"
     }
   }
 );
@@ -67,8 +68,8 @@ const RootStack = createStackNavigator(
     }
   },
   {
-    mode: 'modal',
-    headerMode: 'none'
+    mode: "modal",
+    headerMode: "none"
   }
 );
 
@@ -79,7 +80,7 @@ const RootSwitch = createSwitchNavigator(
     EmptyState: NoCardStack
   },
   {
-    initialRouteName: 'Loading'
+    initialRouteName: "Loading"
   }
 );
 
@@ -90,7 +91,7 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center'
+    flexDirection: "row",
+    justifyContent: "center"
   }
 });
