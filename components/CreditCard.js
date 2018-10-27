@@ -26,6 +26,10 @@ export default class CreditCard extends React.Component<Props> {
     clickable: true,
   };
 
+  getValue(name) {
+    return this[name]();
+  }
+
   cvc() {
     if (!this.props.cvc) {
       return '•••';
@@ -82,7 +86,7 @@ export default class CreditCard extends React.Component<Props> {
             />
             <View style={styles.info}>
               <View style={styles.name}>
-                <Text style={styles.textNumber}>{this.props.number}</Text>
+                <Text style={styles.textNumber}>{this.getValue('number')}</Text>
               </View>
             </View>
             <View style={styles.cardName}>
@@ -100,7 +104,7 @@ export default class CreditCard extends React.Component<Props> {
             />
             {this.props.children}
             <View style={styles.cvc}>
-              <Text style={styles.textCvc}>{this.props.cvc}</Text>
+              <Text style={styles.textCvc}>{this.getValue('cvc')}</Text>
             </View>
           </View>
         </FlipCard>
