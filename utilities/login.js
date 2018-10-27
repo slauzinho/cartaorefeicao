@@ -1,81 +1,150 @@
-import request from "superagent";
-import _ from "lodash";
-import axios from "axios";
+import request from 'superagent';
+import _ from 'lodash';
+import axios from 'axios';
 import moment from 'moment';
+import HTMLParser from 'fast-html-parser';
 
 export const loginEdenred = async (cardNumber, password, email) => {
   const postData = {
     userId: email,
     password,
-    rememberme:true
+    rememberme: true,
   };
 
   const headers = {
     'postman-token': 'f1e2cec5-9d57-6415-127c-ad9abf8610ec',
-     'cache-control': 'no-cache',
-     'Content-Type': 'application/json',
-     Accept: 'application/json'
+    'cache-control': 'no-cache',
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
   try {
-      const config = {
-        url: "https://www.myedenred.pt/edenred-customer/api/authenticate/default",
-        method: "POST",
-        headers,
-        params: { appVersion: '1.0', appType: 'PORTAL', channel: 'WEB' },
-        data: postData,
-        withCredentials: true,
-        crossdomain: true,
-      }
-      var {data: {data: {token}}} = await axios(config);
-  } catch(err) {
-    throw "Login invalido";
+    const config = {
+      url: 'https://www.myedenred.pt/edenred-customer/api/authenticate/default',
+      method: 'POST',
+      headers,
+      params: { appVersion: '1.0', appType: 'PORTAL', channel: 'WEB' },
+      data: postData,
+      withCredentials: true,
+      crossdomain: true,
+    };
+    var {
+      data: {
+        data: { token },
+      },
+    } = await axios(config);
+  } catch (err) {
+    throw 'Login invalido';
   }
 
   const {
-    data: { data: cards }
+    data: { data: cards },
   } = await axios.get(
-    "https://www.myedenred.pt/edenred-customer/api/protected/card/list",
+    'https://www.myedenred.pt/edenred-customer/api/protected/card/list',
     { headers: { Authorization: token } }
   );
 
-  const card = cards.filter(card => (card.number == cardNumber))[0];
+  const card = cards.filter(card => card.number == cardNumber)[0];
 
   try {
-    var {data: {data: {movementList: transactions}}, data: {data: {account: {availableBalance}}}} = await axios.get(
+    var {
+      data: {
+        data: { movementList: transactions },
+      },
+      data: {
+        data: {
+          account: { availableBalance },
+        },
+      },
+    } = await axios.get(
       `https://www.myedenred.pt/edenred-customer/api/protected/card/${
         card.id
       }/accountmovement?appVersion=1.0`,
       { headers: { Authorization: token } }
     );
-  } catch(err) {
-    throw "Numero do cartão não existe";
+  } catch (err) {
+    throw 'Numero do cartão não existe';
   }
 
-  const transactionParsed =  transactions.map(transaction => {
+  const transactionParsed = transactions.map(transaction => {
     const regex = /(.*)\s{2,10}/gm;
     m = regex.exec(transaction.transactionName.trim().replace('Compra: ', ''));
-    let description = transaction.transactionName.trim().replace('Compra: ', '');
-    if(m) {
-      description = m[0].trim()
-    } 
-    return {
-        date: moment(transaction.transactionDate).format("DD-MM-YYYY"),
-        description: description,
-        value: (transaction.amount + "€").replace('.', ',')
+    let description = transaction.transactionName
+      .trim()
+      .replace('Compra: ', '');
+    if (m) {
+      description = m[0].trim();
     }
+    return {
+      date: moment(transaction.transactionDate).format('DD-MM-YYYY'),
+      description: description,
+      value: (transaction.amount + '€').replace('.', ','),
+    };
   });
 
-  return {saldo: (availableBalance + "€").replace('.', ','), transactions: transactionParsed}
+  return {
+    saldo: (availableBalance + '€').replace('.', ','),
+    transactions: transactionParsed,
+  };
 };
+
+function handleNbpGuard(token) {
+  const regex = /(.*):(.*)/gm;
+  let m = regex.exec(token);
+  let matched;
+  m.forEach((match, groupIndex) => {
+    if (groupIndex === 2) {
+      matched = match;
+    }
+  });
+  return matched;
+}
 
 export const loginSantander = async (cardNumber, cardPassword) => {
   const agent = request.agent();
-  await agent.get(
-    `https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?accion=3&identificacionUsuario=${cardNumber}&claveConsultiva=${cardPassword}`
+  const r = await agent.get(
+    'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/0,,,0.shtml'
   );
+  const headers = { 'FETCH-CSRF-TOKEN': '1' };
+  const config = {
+    url: 'https://www.particulares.santandertotta.pt/nbp_guard',
+    method: 'POST',
+    headers,
+    withCredentials: true,
+    crossdomain: true,
+  };
+  const nbpGuardString = await axios(config);
+  const nbpGuard = await handleNbpGuard(nbpGuardString.data);
+  const root = HTMLParser.parse(r.text);
+  const javaCodes = root.querySelectorAll('input');
+  const uuiCodeCardNumber = javaCodes[1].id;
+  const uuiCodeCardCVC = javaCodes[2].id;
+
+  await agent
+    .post(
+      'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
+    )
+    .send('accion=3')
+    .send(`${uuiCodeCardNumber}=${cardNumber}`)
+    .send(`${uuiCodeCardCVC}=${cardPassword}`)
+    .send(`OGC_TOKEN=${nbpGuard}`);
+  const loginUnParsed = await agent
+    .post(
+      'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
+    )
+    .send('accion=3')
+    .send(`${uuiCodeCardNumber}=${cardNumber}`)
+    .send(`${uuiCodeCardCVC}=${cardPassword}`)
+    .send(`OGC_TOKEN=${nbpGuard}`);
+
+  const loginHtml = HTMLParser.parse(loginUnParsed.text);
+  const validLogin = loginHtml.querySelectorAll('input');
+
+  if (validLogin.length > 0) {
+    throw 'Login Invalido';
+  }
   const getResult = await agent.get(
-    "https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml"
+    'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
   );
 
   return getResult.text;
@@ -95,12 +164,11 @@ export const reducerSantander = (accumulator, currentValue, index) => {
         parseFloat(currentValue.removeWhitespace().text.slice(0, 6))
       )
         ? currentValue.removeWhitespace().text.slice(15)
-        : currentValue.removeWhitespace().text
+        : currentValue.removeWhitespace().text,
     };
   }
   return {
     ...accumulator,
-    value: currentValue.removeWhitespace().text.slice(0, -4) + "€"
+    value: currentValue.removeWhitespace().text.slice(0, -4) + '€',
   };
 };
-

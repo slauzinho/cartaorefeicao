@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+// @flow
+import * as React from "react";
 import {
   View,
   Text,
@@ -8,6 +9,7 @@ import {
   ScrollView
 } from "react-native";
 import { Card } from "react-native-elements";
+import type { NavigationScreenConfig } from 'react-navigation';
 
 const StanderInstructions = () => (
   <View>
@@ -63,12 +65,20 @@ const EdenRedInstructions = () => (
   </View>
 );
 
-class InstructionsScreen extends Component {
+type Props = {
+  children: React.Node
+}
+
+type State = {
+  active: string
+}
+
+class InstructionsScreen extends React.Component<Props, State> {
   state = {
     active: "santander"
   };
 
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({ navigation }: NavigationScreenConfig<any>) => ({
     title: navigation.state.params
       ? navigation.state.params.otherParam
       : "Instruções:"

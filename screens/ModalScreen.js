@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Button, AsyncStorage, Image } from 'react-native';
+import type { NavigationScreenProp } from 'react-navigation';
 
 const deleteItem = (item, navigation) => {
   AsyncStorage.removeItem(item.cardNumber).then(() => {
@@ -7,7 +8,11 @@ const deleteItem = (item, navigation) => {
   });
 };
 
-const ModalScreen = props => {
+type Props = {
+  navigation: NavigationScreenProp<any>
+}
+
+const ModalScreen = (props: Props) => {
   const { item } = props.navigation.state.params;
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

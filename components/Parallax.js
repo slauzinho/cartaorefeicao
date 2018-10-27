@@ -45,6 +45,7 @@ class Parallax extends React.Component {
         >
           <View style={{ flex: 1 }}>
             <Transactions
+              key={this.props.activeIndex}
               cardNumber={cards[activeIndex].cardNumber}
               cardPassword={cards[activeIndex].cardPassword}
               email={cards[activeIndex].email}

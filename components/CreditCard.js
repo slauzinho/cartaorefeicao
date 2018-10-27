@@ -1,13 +1,30 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react'
 import FlipCard from 'react-native-flip-card';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import PropTypes from 'prop-types';
 import frontCard from '../assets/images/front2.png';
 
-export default class CreditCard extends Component {
-  getValue(name) {
-    return this[name]();
-  }
+type Props = {
+  number: number,
+  cvc: string,
+  nome: string,
+  bgColor: string,
+  focused: boolean,
+  children?: React.Node,
+  clickable: boolean
+}
+
+export default class CreditCard extends React.Component<Props> {
+
+  static defaultProps = {
+    number: null,
+    cvc: null,
+    focused: null,
+    bgColor: '#F57A7A',
+    nome: '',
+    children: null,
+    clickable: true,
+  };
 
   cvc() {
     if (!this.props.cvc) {
@@ -65,7 +82,7 @@ export default class CreditCard extends Component {
             />
             <View style={styles.info}>
               <View style={styles.name}>
-                <Text style={styles.textNumber}>{this.getValue('number')}</Text>
+                <Text style={styles.textNumber}>{this.props.number}</Text>
               </View>
             </View>
             <View style={styles.cardName}>
@@ -83,7 +100,7 @@ export default class CreditCard extends Component {
             />
             {this.props.children}
             <View style={styles.cvc}>
-              <Text style={styles.textCvc}>{this.getValue('cvc')}</Text>
+              <Text style={styles.textCvc}>{this.props.cvc}</Text>
             </View>
           </View>
         </FlipCard>
@@ -144,26 +161,3 @@ const styles = StyleSheet.create({
     bottom: 20
   }
 });
-
-CreditCard.defaultProps = {
-  number: null,
-  cvc: null,
-  focused: null,
-  bgColor: '#F57A7A',
-  nome: '',
-  children: null,
-  clickable: true,
-};
-
-CreditCard.propTypes = {
-  number: PropTypes.string,
-  cvc: PropTypes.string,
-  nome: PropTypes.string,
-  bgColor: PropTypes.string,
-  focused: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
-  clickable: PropTypes.bool,
-};

@@ -1,9 +1,20 @@
-import React, { Component } from "react";
+// @flow
+import * as React from "react";
 import { Icon } from "react-native-elements";
+import type { NavigationState, NavigationScreenProp, NavigationStateRoute } from 'react-navigation';
 import AddCard from "../components/AddCard";
 
-class AddCardScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
+type Props = {
+  children: ?React.Node,
+  navigation: NavigationScreenProp<NavigationState>,
+}
+
+type Params = {
+  otherParam: ?string
+}
+
+class AddCardScreen extends React.Component<Props> {
+  static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp<NavigationStateRoute> }) => ({
     title: navigation.state.params
       ? navigation.state.params.otherParam
       : "Adicionar cartão",

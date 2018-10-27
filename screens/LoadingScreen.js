@@ -1,8 +1,14 @@
+// @flow
 import React from "react";
 import { ActivityIndicator, AsyncStorage } from "react-native";
+import type { NavigationScreenProp } from 'react-navigation';
 
-export default class LoadingScreen extends React.Component {
-  constructor(props) {
+type Props = {
+  navigation: NavigationScreenProp<any>
+}
+
+export default class LoadingScreen extends React.Component<Props> {
+  constructor(props: Props) {
     super(props);
     this._fetchCards();
   }
