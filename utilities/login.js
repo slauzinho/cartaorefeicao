@@ -100,7 +100,7 @@ function handleNbpGuard(token) {
   return matched;
 }
 
-export const loginSantander = async (cardNumber, cardPassword) => {
+export const loginSantander = async (cardNumber, cardPassword, tentativas=0) => {
   const agent = request.agent();
   const r = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/0,,,0.shtml'
@@ -120,14 +120,6 @@ export const loginSantander = async (cardNumber, cardPassword) => {
   const uuiCodeCardNumber = javaCodes[1].id;
   const uuiCodeCardCVC = javaCodes[2].id;
 
-  await agent
-    .post(
-      'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
-    )
-    .send('accion=3')
-    .send(`${uuiCodeCardNumber}=${cardNumber}`)
-    .send(`${uuiCodeCardCVC}=${cardPassword}`)
-    .send(`OGC_TOKEN=${nbpGuard}`);
   const loginUnParsed = await agent
     .post(
       'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
@@ -137,15 +129,27 @@ export const loginSantander = async (cardNumber, cardPassword) => {
     .send(`${uuiCodeCardCVC}=${cardPassword}`)
     .send(`OGC_TOKEN=${nbpGuard}`);
 
-  const loginHtml = HTMLParser.parse(loginUnParsed.text);
-  const validLogin = loginHtml.querySelectorAll('input');
+  await agent
+    .post('https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/desconexion/?')
+    .send('accion=2')
+    .send('params=no')
+    .send(`OGC_TOKEN=${nbpGuard}`);
 
-  if (validLogin.length > 0) {
-    throw 'Login Invalido';
-  }
   const getResult = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
-  );
+    );
+
+  const transactionsHtml = HTMLParser.parse(getResult.text);
+  const validLogin = transactionsHtml.querySelectorAll('input');
+    if (validLogin.length <= 3) {
+      console.log("falhou uma vez")
+      if(tentativas<4) {
+        return loginSantander(cardNumber, cardPassword, tentativas+1);
+      } else {
+        console.log("falhou duas vezes")
+        throw 'Login Invalido';
+      }
+    } 
 
   return getResult.text;
 };
