@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, WebView } from 'react-native';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import PropTypes from 'prop-types';
 import { material } from 'react-native-typography';
@@ -19,6 +19,11 @@ class Parallax extends React.Component {
   };
 
   _changeSaldo = saldo => this.setState({ saldo });
+
+  componentWillUnmount() {
+    this.state.saldo = null;
+    this._changeSaldo = null;
+  }
 
   render() {
     const { cards, activeIndex } = this.props;
@@ -51,8 +56,8 @@ class Parallax extends React.Component {
               email={cards[activeIndex].email}
               saldo={this._changeSaldo}
               tipo={cards[activeIndex].tipo}
-              render={({ dataSource, loading }) => (
-                <TransactionsList dataSource={dataSource} loading={loading} />
+              render={({ dataSource, loading, error }) => (
+                <TransactionsList dataSource={dataSource} loading={loading} error={error}/>
               )}
             />
           </View>
