@@ -1,12 +1,27 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { createStackNavigator, createSwitchNavigator } from "react-navigation";
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga'
 import Home from "./components/Home";
 import InstructionsScreen from "./screens/InstructionsScreen";
 import ModalScreen from "./screens/ModalScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import NoCardScreen from "./screens/NoCardScreen";
 import AddCardScreen from "./screens/AddCardScreen";
+import reducer from './reducers';
+import {rootSaga} from './rootSaga';
+
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(
+  reducer,
+  applyMiddleware(sagaMiddleware)
+)
+
+sagaMiddleware.run(rootSaga);
+
+console.log(store.getState())
 
 const MainStack = createStackNavigator(
   {
@@ -84,7 +99,7 @@ const RootSwitch = createSwitchNavigator(
   }
 );
 
-const App = () => <RootSwitch style={styles.container} />;
+const App = () => <Provider store={store}><RootSwitch style={styles.container} /></Provider>
 
 export default App;
 
