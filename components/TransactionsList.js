@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, FlatList, ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
 import Row from './Row';
 import Error from './Error';
 
@@ -10,10 +11,10 @@ const _renderItem = ({ item }) => <Row {...item} />;
 
 const TransactionsList = props => {
   if (props.error) {
-    return <Error />
-  } 
+    return <Error />;
+  }
 
-  return (props.loading ? (
+  return props.loading ? (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="grey" />
     </View>
@@ -23,15 +24,15 @@ const TransactionsList = props => {
       renderItem={_renderItem}
       keyExtractor={_keyExtractor}
     />
-  ));  
-}
+  );
+};
 
 _renderItem.propTypes = {
   item: PropTypes.shape({
     description: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-  }).isRequired
+  }).isRequired,
 };
 
 TransactionsList.propTypes = {
@@ -41,12 +42,17 @@ TransactionsList.propTypes = {
       description: PropTypes.string.isRequired,
       value: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
-    })).isRequired
+    })
+  ).isRequired,
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
-export default TransactionsList;
+export default connect(state => ({
+  dataSource: state.index.transactions,
+  loading: state.index.loading,
+  error: state.index.error,
+}))(TransactionsList);

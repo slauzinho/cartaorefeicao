@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { ActivityIndicator, AsyncStorage } from "react-native";
+import { ActivityIndicator } from "react-native";
 import type { NavigationScreenProp } from 'react-navigation';
 import { fetchCardsRequest } from '../actions';
 import { connect } from 'react-redux';
@@ -15,7 +15,7 @@ class LoadingScreen extends React.Component<Props> {
     this.props.fetchCards()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.props.cards.length > 0) {
       this.props.navigation.navigate("App");
     } else {

@@ -14,13 +14,20 @@ class Home extends React.Component {
       <Parallax
         cards={this.props.cards}
         changeIndex={this._changeIndex}
-        activeIndex={this.state.activeIndex}
+        activeIndex={this.props.activeIndex}
       />
     );
   }
 }
 
+function mapStateToProps(state: any) {
+  return {
+    cards: state.cards.cards,
+    activeIndex: state.index.activeIndex,
+  };
+}
+
 export default connect(
-  state => ({ ...state.cards }),
+  mapStateToProps,
   {}
 )(Home);

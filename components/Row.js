@@ -34,7 +34,7 @@ export default Row;
 Row.propTypes = {
   value: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired
+  date: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
     margin: 20,
     borderBottomWidth: 1,
     paddingBottom: 25,
-    borderBottomColor: 'rgba(220,220,220, 0.8)'
-  }
+    borderBottomColor: 'rgba(220,220,220, 0.8)',
+  },
 });

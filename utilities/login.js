@@ -156,9 +156,29 @@ export const loginSantander = async (
       console.log('falhou duas vezes');
       throw 'Login Invalido';
     }
+  } else {
+    const transactions = transactionsHtml
+      .querySelectorAll('table.trans')[1]
+      .querySelector('tbody')
+      .querySelectorAll('tr')
+      .slice(1)
+      .map(tr => tr.querySelectorAll('td').reduce(reducerSantander, {}));
+  
+    const saldo =
+    transactionsHtml
+        .querySelector('table.trans')
+        .querySelector('tbody')
+        .querySelectorAll('tr')[1]
+        .querySelectorAll('td')[2]
+        .querySelector('b')
+        .text.slice(0, -4) + '€';
+
+        return {
+        saldo: (saldo).replace('.', ','),
+        transactions,
+      };
   }
 
-  return getResult.text;
 };
 
 export const reducerSantander = (accumulator, currentValue, index) => {

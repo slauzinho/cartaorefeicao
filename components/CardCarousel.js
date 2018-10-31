@@ -4,7 +4,9 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux';
 import CreditCard from './CreditCard';
+import { changeActiveIndex } from '../actions';
 
 function renderItem({ item }, navigate) {
   return (
@@ -36,15 +38,14 @@ renderItem.propTypes = {
     cardNumber: PropTypes.string.isRequired,
     cardPassword: PropTypes.string.isRequired,
     cardColor: PropTypes.string.isRequired,
-    cardName: PropTypes.string.isRequired
-  }).isRequired
+    cardName: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 class CardCarousel extends React.Component {
   state = {
-    activeSlide: 0
+    activeSlide: 0,
   };
-
   get pagination() {
     const { activeSlide } = this.state;
     return (
@@ -57,7 +58,7 @@ class CardCarousel extends React.Component {
           height: 10,
           borderRadius: 5,
           marginHorizontal: 8,
-          backgroundColor: 'rgba(0, 0, 0, 0.92)'
+          backgroundColor: 'rgba(0, 0, 0, 0.92)',
         }}
         inactiveDotStyle={
           {
@@ -78,14 +79,12 @@ class CardCarousel extends React.Component {
             this._carousel = c;
           }}
           data={this.props.cards}
-          renderItem={args =>
-            renderItem(args, this.props.navigation.navigate)
-          }
+          renderItem={args => renderItem(args, this.props.navigation.navigate)}
           sliderWidth={350}
           itemWidth={300}
           onSnapToItem={index => {
-            this.props.changeIndex(index);
             this.setState({ activeSlide: index });
+            this.props.changeActiveIndex(index);
           }}
         />
         {this.pagination}
@@ -94,7 +93,17 @@ class CardCarousel extends React.Component {
   }
 }
 
-export default withNavigation(CardCarousel);
+function mapStateToProps(state: any) {
+  return {
+    cardss: state.cards,
+    index: state.index.activeIndex,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  { changeActiveIndex }
+)(withNavigation(CardCarousel));
 
 CardCarousel.propTypes = {
   changeIndex: PropTypes.func.isRequired,
@@ -103,7 +112,7 @@ CardCarousel.propTypes = {
       cardNumber: PropTypes.string.isRequired,
       cardPassword: PropTypes.string.isRequired,
       cardColor: PropTypes.string.isRequired,
-      cardName: PropTypes.string.isRequired
+      cardName: PropTypes.string.isRequired,
     }).isRequired
   ).isRequired,
 };
