@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import axios from 'axios';
-import HTMLParser from 'fast-html-parser';
 import type { NavigationScreenProp, NavigationState } from 'react-navigation';
 import {
   StyleSheet,

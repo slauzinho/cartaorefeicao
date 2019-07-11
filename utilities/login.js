@@ -100,7 +100,11 @@ function handleNbpGuard(token) {
   return matched;
 }
 
-export const loginSantander = async (cardNumber, cardPassword, tentativas=0) => {
+export const loginSantander = async (
+  cardNumber,
+  cardPassword,
+  tentativas = 0
+) => {
   const agent = request.agent();
   const r = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/0,,,0.shtml'
@@ -120,7 +124,7 @@ export const loginSantander = async (cardNumber, cardPassword, tentativas=0) => 
   const uuiCodeCardNumber = javaCodes[1].id;
   const uuiCodeCardCVC = javaCodes[2].id;
 
-  const loginUnParsed = await agent
+  await agent
     .post(
       'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
     )
@@ -130,28 +134,51 @@ export const loginSantander = async (cardNumber, cardPassword, tentativas=0) => 
     .send(`OGC_TOKEN=${nbpGuard}`);
 
   await agent
-    .post('https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/desconexion/?')
+    .post(
+      'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/desconexion/?'
+    )
     .send('accion=2')
     .send('params=no')
     .send(`OGC_TOKEN=${nbpGuard}`);
 
+  // mudar para este valor https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/?numeroPagina=&accion=-1&params=si&nuevo=&fechaInicio=&fechaFin=&numMovements=15&numeroMovimientos=99&fromDate=&untilDate=
   const getResult = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
-    );
+  );
 
   const transactionsHtml = HTMLParser.parse(getResult.text);
   const validLogin = transactionsHtml.querySelectorAll('input');
-    if (validLogin.length <= 3) {
-      console.log("falhou uma vez")
-      if(tentativas<4) {
-        return loginSantander(cardNumber, cardPassword, tentativas+1);
-      } else {
-        console.log("falhou duas vezes")
-        throw 'Login Invalido';
-      }
-    } 
+  if (validLogin.length <= 3) {
+    console.log('falhou uma vez');
+    if (tentativas < 4) {
+      return loginSantander(cardNumber, cardPassword, tentativas + 1);
+    } else {
+      console.log('falhou duas vezes');
+      throw 'Login Invalido';
+    }
+  } else {
+    const transactions = transactionsHtml
+      .querySelectorAll('table.trans')[1]
+      .querySelector('tbody')
+      .querySelectorAll('tr')
+      .slice(1)
+      .map(tr => tr.querySelectorAll('td').reduce(reducerSantander, {}));
+  
+    const saldo =
+    transactionsHtml
+        .querySelector('table.trans')
+        .querySelector('tbody')
+        .querySelectorAll('tr')[1]
+        .querySelectorAll('td')[2]
+        .querySelector('b')
+        .text.slice(0, -4) + '€';
 
-  return getResult.text;
+        return {
+        saldo: (saldo).replace('.', ','),
+        transactions,
+      };
+  }
+
 };
 
 export const reducerSantander = (accumulator, currentValue, index) => {
