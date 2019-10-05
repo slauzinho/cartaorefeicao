@@ -57,9 +57,7 @@ export const loginEdenred = async (cardNumber, password, email) => {
         },
       },
     } = await axios.get(
-      `https://www.myedenred.pt/edenred-customer/api/protected/card/${
-        card.id
-      }/accountmovement?appVersion=1.0`,
+      `https://www.myedenred.pt/edenred-customer/api/protected/card/${card.id}/accountmovement?appVersion=1.0`,
       { headers: { Authorization: token } }
     );
   } catch (err) {
@@ -124,7 +122,13 @@ export const loginSantander = async (
   const uuiCodeCardNumber = javaCodes[1].id;
   const uuiCodeCardCVC = javaCodes[2].id;
 
-  await agent
+  console.log({
+    nbpGuard,
+    uuiCodeCardNumber,
+    uuiCodeCardCVC,
+  });
+
+  const asdad = await agent
     .post(
       'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
     )
@@ -133,20 +137,13 @@ export const loginSantander = async (
     .send(`${uuiCodeCardCVC}=${cardPassword}`)
     .send(`OGC_TOKEN=${nbpGuard}`);
 
-  await agent
-    .post(
-      'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/desconexion/?'
-    )
-    .send('accion=2')
-    .send('params=no')
-    .send(`OGC_TOKEN=${nbpGuard}`);
-
   // mudar para este valor https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/?numeroPagina=&accion=-1&params=si&nuevo=&fechaInicio=&fechaFin=&numMovements=15&numeroMovimientos=99&fromDate=&untilDate=
   const getResult = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
   );
 
   const transactionsHtml = HTMLParser.parse(getResult.text);
+
   const validLogin = transactionsHtml.querySelectorAll('input');
   if (validLogin.length <= 3) {
     console.log('falhou uma vez');
@@ -163,9 +160,9 @@ export const loginSantander = async (
       .querySelectorAll('tr')
       .slice(1)
       .map(tr => tr.querySelectorAll('td').reduce(reducerSantander, {}));
-  
+
     const saldo =
-    transactionsHtml
+      transactionsHtml
         .querySelector('table.trans')
         .querySelector('tbody')
         .querySelectorAll('tr')[1]
@@ -173,12 +170,11 @@ export const loginSantander = async (
         .querySelector('b')
         .text.slice(0, -4) + '€';
 
-        return {
-        saldo: (saldo).replace('.', ','),
-        transactions,
-      };
+    return {
+      saldo: saldo.replace('.', ','),
+      transactions,
+    };
   }
-
 };
 
 export const reducerSantander = (accumulator, currentValue, index) => {
