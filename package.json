@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/react": "^16.9.5",
+    "@types/react-native": "^0.60.19",
+    "@types/react-navigation": "^3.0.8",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -12,7 +15,8 @@
     "flow-bin": "^0.109.0",
     "jest-expo": "^35.0.0",
     "react-native-scripts": "2.0.1",
-    "react-test-renderer": "16.10.2"
+    "react-test-renderer": "16.10.2",
+    "typescript": "^3.6.4"
   },
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -42,9 +46,10 @@
     "react-native-typography": "^1.4.1",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^2.5.2",
-    "react-redux": "^5.1.0",
+    "react-redux": "^7.1.1",
     "redux": "^4.0.4",
     "redux-saga": "^0.16.2",
+    "redux-thunk": "^2.3.0",
     "superagent": "^5.1.0",
     "util": "^0.11.0"
   }
