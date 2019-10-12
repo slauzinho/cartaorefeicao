@@ -20,7 +20,7 @@ class Home extends React.Component {
   }
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state) {
   return {
     cards: state.cards.cards,
     activeIndex: state.index.activeIndex,
