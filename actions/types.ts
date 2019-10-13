@@ -8,6 +8,10 @@ export const FETCH_SITE_REQUEST = 'FETCH_SITE_REQUEST';
 export const FETCH_SITE_SUCCESS = 'FETCH_SITE_SUCCESS';
 export const FETCH_SITE_FAILURE = 'FETCH_SITE_FAILURE';
 export const RESET_ACTIVE_STATE = 'RESET_ACTIVE_STATE';
+export const ADD_CARD_SUCCESS = 'ADD_CARD_SUCCESS';
+export const ADD_CARD_REQUEST = 'ADD_CARD_REQUEST';
+export const REMOVE_CARD_SUCCESS = 'REMOVE_CARD_SUCCESS';
+export const REMOVE_CARD_REQUEST = 'REMOVE_CARD_REQUEST';
 
 interface FetchCardsRequest {
   type: typeof FETCH_CARDS_REQUEST;
@@ -52,6 +56,25 @@ interface FetchCardsSuccess {
   cards: Card[];
 }
 
+export interface AddCardRequest {
+  type: typeof ADD_CARD_REQUEST;
+  card: Card;
+}
+interface AddCardSuccess {
+  type: typeof ADD_CARD_SUCCESS;
+  card: Card;
+}
+
+export interface RemoveCardRequest {
+  type: typeof REMOVE_CARD_REQUEST;
+  cardNumber: string;
+}
+
+interface RemoveCardSuccess {
+  type: typeof REMOVE_CARD_SUCCESS;
+  cardNumber: string;
+}
+
 export type CardActionTypes =
   | FetchCardsRequest
   | FetchCardsSuccess
@@ -59,4 +82,8 @@ export type CardActionTypes =
   | FetchSiteRequest
   | FetchSiteSuccess
   | FetchSiteFailure
+  | AddCardRequest
+  | AddCardSuccess
+  | RemoveCardRequest
+  | RemoveCardSuccess
   | ResetActiveState;

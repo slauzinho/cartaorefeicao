@@ -6,15 +6,40 @@ import {
   FETCH_SITE_REQUEST,
   FETCH_SITE_FAILURE,
   FETCH_CARDS_REQUEST,
+  REMOVE_CARD_REQUEST,
+  REMOVE_CARD_SUCCESS,
+  ADD_CARD_REQUEST,
+  ADD_CARD_SUCCESS,
 } from '../actions/types';
-import { IndexState } from '../types';
+import { IndexState, CardState } from '../types';
 import { CardActionTypes } from '../actions/types';
 
 export function card(
-  state = { cards: [], loading: true },
+  state: CardState = { cards: [], loading: true },
   action: CardActionTypes
 ) {
   switch (action.type) {
+    case ADD_CARD_REQUEST:
+      return { ...state, loading: true };
+    case ADD_CARD_SUCCESS:
+      const oldCardsFiltered = state.cards.filter(
+        card => card.cardNumber !== action.card.cardName
+      );
+      return {
+        ...state,
+        loading: false,
+        cards: [...oldCardsFiltered, action.card],
+      };
+    case REMOVE_CARD_REQUEST:
+      return { ...state, loading: true };
+    case REMOVE_CARD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cards: state.cards.filter(
+          card => card.cardNumber !== action.cardNumber
+        ),
+      };
     case FETCH_CARDS_REQUEST:
       return { ...state, loading: true };
     case FETCH_CARDS_SUCCESS:

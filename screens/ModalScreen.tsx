@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Button, AsyncStorage, Image } from 'react-native';
-
-const deleteItem = (item, navigation) => {
-  AsyncStorage.removeItem(item.cardNumber).then(() => {
-    navigation.navigate('Loading');
-  });
-};
+import { useDispatch } from 'react-redux';
+import { View, Button, Image } from 'react-native';
+import { removeCardRequest } from '../actions';
 
 const ModalScreen = props => {
+  const dispatch = useDispatch();
+  const deleteItem = (item, navigation) => {
+    dispatch(removeCardRequest(item.cardNumber));
+    navigation.navigate('Loading');
+  };
   const { item } = props.navigation.state.params;
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

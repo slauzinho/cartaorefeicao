@@ -15,6 +15,11 @@ export interface IndexState {
   error: string;
 }
 
+export interface CardState {
+  cards: Card[];
+  loading: boolean;
+}
+
 export interface AppState {
   cards: { cards: Card[]; loading: boolean };
   index: IndexState;

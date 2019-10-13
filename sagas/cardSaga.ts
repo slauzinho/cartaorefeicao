@@ -3,9 +3,17 @@ import {
   fetchCardsSuccess,
   fetchSiteSuccess,
   fetchSiteFailure,
+  removeCardSuccess,
+  addCardSuccess,
 } from '../actions';
 import api from '../api';
-import { FetchSiteRequest } from '../actions/types';
+import {
+  FetchSiteRequest,
+  CardActionTypes,
+  RemoveCardRequest,
+  AddCardRequest,
+} from '../actions/types';
+import { AsyncStorage } from 'react-native';
 
 export function* fetchCardsSaga() {
   try {
@@ -31,4 +39,18 @@ export function* fetchSite(action: FetchSiteRequest) {
   } catch (error) {
     yield put(fetchSiteFailure(error));
   }
+}
+
+export function* removeCard(action: RemoveCardRequest) {
+  yield call(AsyncStorage.removeItem, action.cardNumber);
+  yield put(removeCardSuccess(action.cardNumber));
+}
+
+export function* addCard(action: AddCardRequest) {
+  yield call(
+    AsyncStorage.setItem,
+    action.card.cardNumber,
+    JSON.stringify(action.card)
+  );
+  yield put(addCardSuccess(action.card));
 }
