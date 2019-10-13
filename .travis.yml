@@ -1,14 +1,11 @@
 ---
 language: node_js
 node_js:
-  - node
-  - lts/*
+  - 8
 cache:
   directories:
-    - ~/.npm
-    - .jest
+    - node_modules
 before_script:
-  - npm install -g npm@latest
+  - export PATH=$HOME/.yarn/bin:$PATH
 script:
-  - npm ci
-  - npx jest --ci
+  - yarn test
