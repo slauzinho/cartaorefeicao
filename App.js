@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { createStackNavigator } from 'react-navigation-stack';
 import { logger } from 'redux-logger';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import Parallax from './components/Parallax';
 import InstructionsScreen from './screens/InstructionsScreen';
 import ModalScreen from './screens/ModalScreen';
@@ -15,7 +16,10 @@ import reducer from './reducers';
 import { rootSaga } from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducer, applyMiddleware(sagaMiddleware, logger));
+const store = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware, logger))
+);
 
 sagaMiddleware.run(rootSaga);
 

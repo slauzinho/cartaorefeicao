@@ -1,50 +1,35 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
 import FlipCard from 'react-native-flip-card';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import frontCard from '../assets/images/front2.png';
+import { View, Text, StyleSheet, Image, ViewStyle } from 'react-native';
+import { FunctionComponent } from 'react';
 
-type Props = {
-  number: number,
-  cvc: string,
-  nome: string,
-  bgColor: string,
-  focused: boolean,
-  children?: React.Node,
-  clickable: boolean,
-};
+interface IProps {
+  number: number | string;
+  cvc: string;
+  nome: string;
+  bgColor?: string;
+  focused?: boolean;
+  clickable?: boolean;
+  cardStyle?: ViewStyle;
+}
 
-export default class CreditCard extends React.Component<Props> {
-  static defaultProps = {
-    number: null,
-    cvc: null,
-    focused: null,
-    bgColor: '#F57A7A',
-    nome: '',
-    children: null,
-    clickable: true,
-  };
-
-  getValue(name) {
-    return this[name]();
-  }
-
-  cvc() {
-    if (!this.props.cvc) {
+const CreditCard: FunctionComponent<IProps> = props => {
+  const cvc = () => {
+    if (!props.cvc) {
       return '•••';
     }
-    return this.props.cvc.toString().length < 4
-      ? this.props.cvc
-      : this.props.cvc.toString().slice(0, 3);
-  }
+    return props.cvc.toString().length < 4
+      ? props.cvc
+      : props.cvc.toString().slice(0, 3);
+  };
 
-  number() {
+  const number = () => {
     let string = '';
 
-    if (!this.props.number) {
+    if (!props.number) {
       string = '';
     } else {
-      string = this.props.number.toString();
+      string = props.number.toString();
     }
 
     if (string.length > 16) string = string.slice(0, 16);
@@ -57,66 +42,65 @@ export default class CreditCard extends React.Component<Props> {
     }
 
     return string;
-  }
+  };
+  const getValue = functionToCall => {
+    if (functionToCall === 'cvc') return cvc();
+    return number();
+  };
 
-  render() {
-    const cardStyle = [
-      styles.container,
-      { width: 300, height: 190, backgroundColor: 'white' },
-    ];
-    return (
-      <View style={cardStyle}>
-        <FlipCard
-          style={[
-            styles.container,
-            { width: 300, height: 190, backgroundColor: this.props.bgColor },
-          ]}
-          friction={6}
-          perspective={1000}
-          flipHorizontal
-          flipVertical={false}
-          clickable={this.props.clickable}
-          flip={this.props.focused === true}
-        >
-          <View style={[styles.front, { width: 300, height: 190 }]}>
-            <Image
-              source={frontCard}
-              style={[styles.bgImage, { width: 300, height: 190 }]}
-            />
-            <View style={styles.info}>
-              <View style={styles.name}>
-                <Text style={styles.textNumber}>{this.getValue('number')}</Text>
-              </View>
-            </View>
-            <View style={styles.cardName}>
-              <Text style={styles.textNumber}>{this.props.nome}</Text>
-            </View>
-            {/* <Image
-              source={require('../assets/images/cartao2.png')}
-              style={[styles.bgLogo, { width: 100, height: 50 }]}
-            /> */}
+  return (
+    <FlipCard
+      style={[
+        styles.container,
+        { width: 300, height: 190, backgroundColor: props.bgColor },
+      ]}
+      friction={6}
+      perspective={1000}
+      flipHorizontal
+      flipVertical={false}
+      clickable={props.clickable}
+      flip={props.focused === true}
+    >
+      <View style={{ width: 300, height: 190 }}>
+        <Image
+          source={require('../assets/images/front2.png')}
+          style={[styles.bgImage, { width: 300, height: 190 }]}
+        />
+        <View style={styles.info}>
+          <View style={styles.name}>
+            <Text style={styles.textNumber}>{getValue('number')}</Text>
           </View>
-          <View style={[styles.front, { width: 300, height: 190 }]}>
-            <Image
-              source={require('../assets/images/Back.png')}
-              style={[styles.bgImage, { width: 300, height: 190 }]}
-            />
-            {this.props.children}
-            <View style={styles.cvc}>
-              <Text style={styles.textCvc}>{this.getValue('cvc')}</Text>
-            </View>
-          </View>
-        </FlipCard>
+        </View>
+        <View style={styles.cardName}>
+          <Text style={styles.textNumber}>{props.nome}</Text>
+        </View>
       </View>
-    );
-  }
-}
+      <View style={{ width: 300, height: 190 }}>
+        <Image
+          source={require('../assets/images/Back.png')}
+          style={[styles.bgImage, { width: 300, height: 190 }]}
+        />
+        {props.children}
+        <View style={styles.cvc}>
+          <Text style={styles.textCvc}>{getValue('cvc')}</Text>
+        </View>
+      </View>
+    </FlipCard>
+  );
+};
+
+CreditCard.defaultProps = {
+  bgColor: '#F57A7A',
+  clickable: true,
+};
+
+export default CreditCard;
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 0,
-    flex: null,
+    flex: 0,
   },
   bgImage: {
     position: 'absolute',

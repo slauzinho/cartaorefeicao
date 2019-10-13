@@ -5,14 +5,20 @@ import {
   FETCH_SITE_SUCCESS,
   FETCH_SITE_REQUEST,
   FETCH_SITE_FAILURE,
+  FETCH_CARDS_REQUEST,
 } from '../actions/types';
 import { IndexState } from '../types';
 import { CardActionTypes } from '../actions/types';
 
-export function card(state = { cards: [] }, action: CardActionTypes) {
+export function card(
+  state = { cards: [], loading: true },
+  action: CardActionTypes
+) {
   switch (action.type) {
+    case FETCH_CARDS_REQUEST:
+      return { ...state, loading: true };
     case FETCH_CARDS_SUCCESS:
-      return { ...state, cards: action.cards };
+      return { ...state, cards: action.cards, loading: false };
     default:
       return state;
   }

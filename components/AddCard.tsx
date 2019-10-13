@@ -9,11 +9,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { Input, Overlay, Button, Badge } from 'react-native-elements';
+import { Input, Button, Badge } from 'react-native-elements';
+import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NavigationInjectedProps } from 'react-navigation';
 import CreditCard from './CreditCard';
 import { loginEdenred, loginSantander } from '../utilities/login';
-import { NavigationInjectedProps } from 'react-navigation';
 
 type State = {
   cardNumber: string;
@@ -216,7 +218,6 @@ export default class AddCard extends React.Component<
                     onPress={() =>
                       this.setState({ isVisible: !this.state.isVisible })
                     }
-                    underlayColor="white"
                   />
                 }
               />
@@ -277,27 +278,27 @@ export default class AddCard extends React.Component<
               onPress={() => this.handlePress()}
             />
           </View>
-          <Overlay
+          <Modal
             isVisible={this.state.isVisible}
-            windowBackgroundColor="rgba(255, 255, 255, .8)"
-            width="auto"
-            height="auto"
-            overlayStyle={styles.overlay}
-            fullscreen
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            onBackdropPress={() => this.setState({ isVisible: false })}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
-            <Image source={require('../assets/images/example.png')} />
-            <Icon
-              name="times"
-              size={30}
-              color="black"
-              onPress={() =>
-                this.setState({ isVisible: !this.state.isVisible })
-              }
-              containerStyle={styles.close}
-              style={styles.close}
-              raised
+            <Image
+              source={require('../assets/images/example.png')}
+              resizeMode="contain"
             />
-          </Overlay>
+            <MaterialCommunityIcons
+              name="close"
+              size={30}
+              style={{ color: 'white' }}
+            />
+          </Modal>
         </ScrollView>
       </View>
     );

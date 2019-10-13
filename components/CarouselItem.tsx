@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { withNavigation, NavigationInjectedProps } from 'react-navigation';
@@ -9,8 +9,10 @@ interface Iprops {
   item: Card;
 }
 
-const CarouselItem = props => {
-  const { item, navigate } = props;
+const CarouselItem: FunctionComponent<
+  NavigationInjectedProps & Iprops
+> = props => {
+  const { item, navigation } = props;
   return (
     <View>
       <CreditCard
@@ -27,7 +29,7 @@ const CarouselItem = props => {
             name="trash"
             type="font-awesome"
             color="black"
-            onPress={() => navigate('MyModal', { item })}
+            onPress={() => navigation.navigate('MyModal', { item })}
           />
         </View>
       </CreditCard>
@@ -35,4 +37,4 @@ const CarouselItem = props => {
   );
 };
 
-export default withNavigation<NavigationInjectedProps & Iprops>(CarouselItem);
+export default withNavigation(CarouselItem);

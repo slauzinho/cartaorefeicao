@@ -1,8 +1,28 @@
 import request from 'superagent';
 import _ from 'lodash';
-import axios from 'axios';
-import moment from 'moment';
+import axios, { AxiosResponse } from 'axios';
 import HTMLParser from 'fast-html-parser';
+
+const generateEdenredTransactions = transactions =>
+  transactions.map(transaction => {
+    const regex = /(.*)\s{2,10}/gm;
+    let m = regex.exec(
+      transaction.transactionName.trim().replace('Compra: ', '')
+    );
+    let description = transaction.transactionName
+      .trim()
+      .replace('Compra: ', '');
+    if (m) {
+      description = m[0].trim();
+    }
+    const utcDate = new Date(transaction.transactionDate);
+    const date = utcDate.toLocaleDateString();
+    return {
+      date,
+      description: description,
+      value: (transaction.amount + '€').replace('.', ','),
+    };
+  });
 
 export const loginEdenred = async (cardNumber, password, email) => {
   const postData = {
@@ -21,7 +41,7 @@ export const loginEdenred = async (cardNumber, password, email) => {
   try {
     const config = {
       url: 'https://www.myedenred.pt/edenred-customer/api/authenticate/default',
-      method: 'POST',
+      method: 'POST' as 'POST',
       headers,
       params: { appVersion: '1.0', appType: 'PORTAL', channel: 'WEB' },
       data: postData,
@@ -47,7 +67,7 @@ export const loginEdenred = async (cardNumber, password, email) => {
   const card = cards.filter(card => card.number == cardNumber)[0];
 
   try {
-    var {
+    const {
       data: {
         data: { movementList: transactions },
       },
@@ -56,34 +76,23 @@ export const loginEdenred = async (cardNumber, password, email) => {
           account: { availableBalance },
         },
       },
-    } = await axios.get(
+    } = await axios.get<
+      AxiosResponse<{
+        movementList: string[];
+        account: { availableBalance: string };
+      }>
+    >(
       `https://www.myedenred.pt/edenred-customer/api/protected/card/${card.id}/accountmovement?appVersion=1.0`,
       { headers: { Authorization: token } }
     );
+
+    return {
+      saldo: (availableBalance + '€').replace('.', ','),
+      transactions: generateEdenredTransactions(transactions),
+    };
   } catch (err) {
     throw 'Numero do cartão não existe';
   }
-
-  const transactionParsed = transactions.map(transaction => {
-    const regex = /(.*)\s{2,10}/gm;
-    m = regex.exec(transaction.transactionName.trim().replace('Compra: ', ''));
-    let description = transaction.transactionName
-      .trim()
-      .replace('Compra: ', '');
-    if (m) {
-      description = m[0].trim();
-    }
-    return {
-      date: moment(transaction.transactionDate).format('DD-MM-YYYY'),
-      description: description,
-      value: (transaction.amount + '€').replace('.', ','),
-    };
-  });
-
-  return {
-    saldo: (availableBalance + '€').replace('.', ','),
-    transactions: transactionParsed,
-  };
 };
 
 function handleNbpGuard(token) {
@@ -110,7 +119,7 @@ export const loginSantander = async (
   const headers = { 'FETCH-CSRF-TOKEN': '1' };
   const config = {
     url: 'https://www.particulares.santandertotta.pt/nbp_guard',
-    method: 'POST',
+    method: 'POST' as 'POST',
     headers,
     withCredentials: true,
     crossdomain: true,
@@ -137,7 +146,6 @@ export const loginSantander = async (
     .send(`${uuiCodeCardCVC}=${cardPassword}`)
     .send(`OGC_TOKEN=${nbpGuard}`);
 
-  // mudar para este valor https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/?numeroPagina=&accion=-1&params=si&nuevo=&fechaInicio=&fechaFin=&numMovements=15&numeroMovimientos=99&fromDate=&untilDate=
   const getResult = await agent.get(
     'https://www.particulares.santandertotta.pt/bepp/sanpt/tarjetas/listadomovimientostarjetarefeicao/0,,,0.shtml'
   );

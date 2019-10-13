@@ -16,7 +16,7 @@ export interface IndexState {
 }
 
 export interface AppState {
-  cards: { cards: Card[] };
+  cards: { cards: Card[]; loading: boolean };
   index: IndexState;
 }
 

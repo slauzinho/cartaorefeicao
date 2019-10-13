@@ -19,7 +19,6 @@ const StanderInstructions = () => (
     </Card>
     <Card>
       <Image
-        style={styles.image}
         resizeMode="contain"
         source={require('../assets/images/example.png')}
       />
