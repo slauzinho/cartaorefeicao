@@ -1,17 +1,17 @@
-const { defaults: tsJestConfig } = require('ts-jest/presets');
-
 module.exports = {
-  ...tsJestConfig,
   preset: 'jest-expo',
   transform: {
-    ...tsJestConfig.transform,
-    '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
+    '^.+\\.js$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
   },
+  testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
+  moduleFileExtensions: ['js', 'ts', 'tsx', 'json'],
   globals: {
     'ts-jest': {
-      babelConfig: false,
-      tsConfig: './tsconfig.jest.json',
+      tsConfig: {
+        jsx: 'react',
+      },
+      diagnostics: false,
     },
   },
-  modulePaths: ['<rootDir>'],
 };

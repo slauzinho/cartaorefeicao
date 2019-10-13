@@ -1,10 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import App from '../App.js';
+import { render } from 'react-native-testing-library';
+import App from '../App';
 
 describe('App', () => {
   it('can render the app', () => {
-    const container = render(<App />);
-    expect(container).toMatchSnapshot();
+    const { toJSON } = render(<App />);
+    expect(toJSON()).toMatchSnapshot();
   });
 });
