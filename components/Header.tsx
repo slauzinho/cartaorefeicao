@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
 import { material } from 'react-native-typography';
+import { ReactChildren } from 'react';
 
-const Header = props => (
+interface Iprops {
+  saldo: string;
+}
+
+const Header: FunctionComponent<Iprops> = props => (
   <View style={styles.header}>
     <View style={{ flex: 1 }}>{props.children}</View>
     <View style={styles.textContainer}>
@@ -18,7 +23,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   textContainer: {
     flex: 0.2,
@@ -26,17 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingLeft: 20,
-    paddingRight: 20
-  }
+    paddingRight: 20,
+  },
 });
-
-Header.defaultProps = {
-  saldo: ''
-};
-
-Header.propTypes = {
-  saldo: PropTypes.string,
-  children: PropTypes.element.isRequired
-};
 
 export default Header;

@@ -1,6 +1,4 @@
-// @flow
 import React from 'react';
-import type { NavigationScreenProp, NavigationState } from 'react-navigation';
 import {
   StyleSheet,
   Text,
@@ -15,27 +13,27 @@ import { Input, Overlay, Button, Badge } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CreditCard from './CreditCard';
 import { loginEdenred, loginSantander } from '../utilities/login';
+import { NavigationInjectedProps } from 'react-navigation';
 
 type State = {
-  cardNumber: string,
-  cardPassword: string,
-  tipo: string,
-  isFocused: boolean,
-  isVisible: boolean,
-  message: ?string,
-  cardName: string,
-  cardColor: string,
-  isLoading: boolean,
-  email: string,
-};
-
-type Props = {
-  navigation: NavigationScreenProp<NavigationState>,
+  cardNumber: string;
+  cardPassword: string;
+  tipo: string;
+  isFocused: boolean;
+  isVisible: boolean;
+  message?: string;
+  cardName: string;
+  cardColor: string;
+  isLoading: boolean;
+  email: string;
 };
 
 const isNumeric = n => !isNaN(parseFloat(n)) && isFinite(n);
 
-export default class AddCard extends React.Component<Props, State> {
+export default class AddCard extends React.Component<
+  NavigationInjectedProps,
+  State
+> {
   static navigationOptions = {
     title: 'Adicionar Cartão',
     headerStyle: {
@@ -58,18 +56,6 @@ export default class AddCard extends React.Component<Props, State> {
     isLoading: false,
     email: '',
   };
-
-  componentWillUnmount() {
-    this.state.cardNumber = '';
-    this.state.cardPassword = '';
-    this.state.tipo = 'santander';
-    this.state.isFocused = false;
-    this.state.isVisible = false;
-    this.state.message = null;
-    this.state.cardName = '';
-    this.state.cardColor = '#F57A7A';
-    this.state.isLoading = false;
-  }
 
   async handlePress() {
     if (this.state.isLoading) {
@@ -145,7 +131,7 @@ export default class AddCard extends React.Component<Props, State> {
             />
             <Picker
               selectedValue={this.state.tipo}
-              style={{ height: 50, width: 300, color: '#86899E' }}
+              style={{ height: 50, width: 300 }}
               onValueChange={itemValue => this.setState({ tipo: itemValue })}
               itemStyle={{ fontWeight: 'bold', fontSize: 300 }}
             >

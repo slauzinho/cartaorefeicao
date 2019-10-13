@@ -1,15 +1,13 @@
-// @flow
-import * as React from "react";
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
   Picker,
-  ScrollView
-} from "react-native";
-import { Card } from "react-native-elements";
-import type { NavigationScreenConfig } from 'react-navigation';
+  ScrollView,
+} from 'react-native';
+import { Card } from 'react-native-elements';
 
 const StanderInstructions = () => (
   <View>
@@ -23,7 +21,7 @@ const StanderInstructions = () => (
       <Image
         style={styles.image}
         resizeMode="contain"
-        source={require("../assets/images/example.png")}
+        source={require('../assets/images/example.png')}
       />
       <Text style={{ marginTop: 50 }}>
         O código corresponde aos ultimos três digitos da parte de trás repetido
@@ -65,23 +63,15 @@ const EdenRedInstructions = () => (
   </View>
 );
 
-type Props = {
-  children: React.Node
-}
-
-type State = {
-  active: string
-}
-
-class InstructionsScreen extends React.Component<Props, State> {
+class InstructionsScreen extends React.Component {
   state = {
-    active: "santander"
+    active: 'santander',
   };
 
-  static navigationOptions = ({ navigation }: NavigationScreenConfig<any>) => ({
+  static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params
       ? navigation.state.params.otherParam
-      : "Instruções:"
+      : 'Instruções:',
   });
 
   render() {
@@ -89,7 +79,7 @@ class InstructionsScreen extends React.Component<Props, State> {
       <View style={styles.container}>
         <ScrollView>
           <View
-            style={{ flex: 1, flexDirection: "column", alignItems: "center" }}
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}
           >
             <View style={styles.containerCards}>
               <Picker
@@ -98,13 +88,13 @@ class InstructionsScreen extends React.Component<Props, State> {
                 onValueChange={itemValue =>
                   this.setState({ active: itemValue })
                 }
-                itemStyle={{ fontWeight: "bold", fontSize: 300, color: "blue" }}
+                itemStyle={{ fontWeight: 'bold', fontSize: 300, color: 'blue' }}
               >
                 <Picker.Item label="Santander" value="santander" />
                 <Picker.Item label="Edenred" value="edenred" />
               </Picker>
             </View>
-            {this.state.active === "santander" ? (
+            {this.state.active === 'santander' ? (
               <StanderInstructions />
             ) : (
               <EdenRedInstructions />
@@ -119,14 +109,14 @@ class InstructionsScreen extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
-    flexDirection: "column"
+    flexDirection: 'column',
   },
   containerCards: {
-    flexDirection: "row",
-    justifyContent: "space-around"
-  }
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
 });
 
 export default InstructionsScreen;

@@ -128,7 +128,7 @@ export const loginSantander = async (
     uuiCodeCardCVC,
   });
 
-  const asdad = await agent
+  await agent
     .post(
       'https://www.particulares.santandertotta.pt/bepp/sanpt/usuarios/loginrefeicao/?'
     )

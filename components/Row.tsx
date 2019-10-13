@@ -2,9 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { material } from 'react-native-typography';
-import PropTypes from 'prop-types';
 
-const Row = props => (
+interface IProps {
+  value: string;
+  description: string;
+  date: string;
+}
+
+const Row = (props: IProps) => (
   <View style={styles.container}>
     <View style={{ flex: 0.1 }}>
       <Icon
@@ -30,12 +35,6 @@ const Row = props => (
 );
 
 export default Row;
-
-Row.propTypes = {
-  value: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-};
 
 const styles = StyleSheet.create({
   container: {

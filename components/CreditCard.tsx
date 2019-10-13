@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react'
+import * as React from 'react';
 import FlipCard from 'react-native-flip-card';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import frontCard from '../assets/images/front2.png';
@@ -11,11 +11,10 @@ type Props = {
   bgColor: string,
   focused: boolean,
   children?: React.Node,
-  clickable: boolean
-}
+  clickable: boolean,
+};
 
 export default class CreditCard extends React.Component<Props> {
-
   static defaultProps = {
     number: null,
     cvc: null,
@@ -53,7 +52,7 @@ export default class CreditCard extends React.Component<Props> {
       string += '•';
     }
     for (let i = 1; i <= 3; i += 1) {
-      const spaceIndex = (i * 4) + (i - 1);
+      const spaceIndex = i * 4 + (i - 1);
       string = string.slice(0, spaceIndex) + ' ' + string.slice(spaceIndex);
     }
 
@@ -63,14 +62,14 @@ export default class CreditCard extends React.Component<Props> {
   render() {
     const cardStyle = [
       styles.container,
-      { width: 300, height: 190, backgroundColor: 'white' }
+      { width: 300, height: 190, backgroundColor: 'white' },
     ];
     return (
       <View style={cardStyle}>
         <FlipCard
           style={[
             styles.container,
-            { width: 300, height: 190, backgroundColor: this.props.bgColor }
+            { width: 300, height: 190, backgroundColor: this.props.bgColor },
           ]}
           friction={6}
           perspective={1000}
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 0,
-    flex: null
+    flex: null,
   },
   bgImage: {
     position: 'absolute',
@@ -125,12 +124,12 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     right: 0,
-    borderRadius: 8
+    borderRadius: 8,
   },
   name: {
     flex: 2,
     paddingTop: 40,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   textNumber: {
     color: '#fff',
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
-    fontFamily: 'monospace'
   },
   cvc: {
     width: 90,
@@ -150,18 +148,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     right: 0,
-    top: 115
+    top: 115,
   },
   textCvc: {
     color: '#000',
-    fontSize: 18
+    fontSize: 18,
   },
   info: {
-    flex: 1
+    flex: 1,
   },
   cardName: {
     position: 'absolute',
     left: 32,
-    bottom: 20
-  }
+    bottom: 20,
+  },
 });

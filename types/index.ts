@@ -6,3 +6,27 @@ export interface Card {
   email?: string;
   tipo?: string;
 }
+
+export interface IndexState {
+  activeIndex: number;
+  saldo: string;
+  transactions: Transaction[];
+  loading: boolean;
+  error: string;
+}
+
+export interface AppState {
+  cards: { cards: Card[] };
+  index: IndexState;
+}
+
+export interface Transaction {
+  description: string;
+  value: string;
+  date: string;
+}
+
+export interface Details {
+  saldo: string;
+  transactions: Transaction[];
+}

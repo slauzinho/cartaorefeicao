@@ -6,7 +6,9 @@
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "module": "esnext"
   },
   "includes": ["**/*"],
   "exclude": ["**/*.spec.ts", "app_/**/*.ts", "**/*.d.ts", "node_modules"]

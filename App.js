@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
-import Home from './components/Home';
+import { createStackNavigator } from 'react-navigation-stack';
+import { logger } from 'redux-logger';
+import Parallax from './components/Parallax';
 import InstructionsScreen from './screens/InstructionsScreen';
 import ModalScreen from './screens/ModalScreen';
 import LoadingScreen from './screens/LoadingScreen';
@@ -14,14 +15,14 @@ import reducer from './reducers';
 import { rootSaga } from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const store = createStore(reducer, applyMiddleware(sagaMiddleware, logger));
 
 sagaMiddleware.run(rootSaga);
 
 const MainStack = createStackNavigator(
   {
     Home: {
-      screen: Home,
+      screen: Parallax,
       headerMode: 'none',
       header: null,
       navigationOptions: {
@@ -83,29 +84,23 @@ const RootStack = createStackNavigator(
   }
 );
 
-const RootSwitch = createSwitchNavigator(
-  {
-    Loading: LoadingScreen,
-    App: RootStack,
-    EmptyState: NoCardStack,
-  },
-  {
-    initialRouteName: 'Loading',
-  }
+const AppContainer = createAppContainer(
+  createSwitchNavigator(
+    {
+      Loading: LoadingScreen,
+      App: RootStack,
+      EmptyState: NoCardStack,
+    },
+    {
+      initialRouteName: 'Loading',
+    }
+  )
 );
 
 const App = () => (
   <Provider store={store}>
-    <RootSwitch style={styles.container} />
+    <AppContainer />
   </Provider>
 );
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});

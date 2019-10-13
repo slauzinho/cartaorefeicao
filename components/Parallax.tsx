@@ -4,24 +4,22 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { material } from 'react-native-typography';
 import { Icon } from 'react-native-elements';
 import { withNavigation, NavigationInjectedProps } from 'react-navigation';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Header from './Header';
-import Transactions from './Transactions';
 import CardCarousel from './CardCarousel';
 import TransactionsList from './TransactionsList';
-import { Card } from '../types';
+import { Card, AppState } from '../types';
 
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 50;
 
-interface IProps {
-  cards: Card[];
-  activeIndex: number;
-  saldo: string | number;
-}
-
-const Parallax = (props: IProps & NavigationInjectedProps) => {
-  const { cards, saldo, activeIndex, navigation } = props;
+const Parallax = props => {
+  const { navigation } = props;
+  const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
+  const activeIndex = useSelector<AppState, number>(
+    state => state.index.activeIndex
+  );
+  const saldo = useSelector<AppState, string>(state => state.index.saldo);
   return (
     <View style={{ flex: 1, marginTop: 40 }}>
       <ParallaxScrollView
@@ -41,14 +39,7 @@ const Parallax = (props: IProps & NavigationInjectedProps) => {
         )}
       >
         <View style={{ flex: 1 }}>
-          <Transactions
-            key={props.activeIndex}
-            cardNumber={cards[activeIndex].cardNumber}
-            cardPassword={cards[activeIndex].cardPassword}
-            email={cards[activeIndex].email}
-            tipo={cards[activeIndex].tipo}
-            render={() => <TransactionsList />}
-          />
+          <TransactionsList />
         </View>
       </ParallaxScrollView>
       <View style={styles.settings}>
@@ -65,13 +56,7 @@ const Parallax = (props: IProps & NavigationInjectedProps) => {
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    saldo: state.index.saldo,
-  };
-}
-
-export default connect(mapStateToProps)(withNavigation(Parallax));
+export default withNavigation<NavigationInjectedProps>(Parallax);
 
 const styles = StyleSheet.create({
   stickySection: {
