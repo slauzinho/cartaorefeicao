@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
-import { loginEdenred, loginSantander } from '../utilities'
+import { loginEdenred, loginSantander } from '../utilities';
 
-const fetchAllCardsFromStorare = async () => {
+const fetchAllCardsFromStorage = async () => {
   const keys = await AsyncStorage.getAllKeys();
   return Promise.all(
     keys.map(key =>
@@ -16,21 +16,21 @@ const fetchAllCardsFromStorare = async () => {
 };
 
 const fetchEdenred = async (cardNumber, password, email) => {
-  return loginEdenred(cardNumber, password, email)
-}
+  return loginEdenred(cardNumber, password, email);
+};
 
-const fetchSantander= async (cardNumber, password) => {
+const fetchSantander = async (cardNumber, password) => {
   return loginSantander(cardNumber, password);
-}
+};
 
 export default {
   card: {
-    fetchAll: fetchAllCardsFromStorare,
+    fetchAll: fetchAllCardsFromStorage,
   },
   edenred: {
-    fetch: fetchEdenred
+    fetch: fetchEdenred,
   },
   santander: {
-    fetch: fetchSantander
-  }
+    fetch: fetchSantander,
+  },
 };

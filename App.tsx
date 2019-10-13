@@ -25,14 +25,7 @@ sagaMiddleware.run(rootSaga);
 
 const MainStack = createStackNavigator(
   {
-    Home: {
-      screen: Parallax,
-      headerMode: 'none',
-      header: null,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    Home: Parallax,
     Add: AddCardScreen,
     Help: InstructionsScreen,
   },
@@ -50,14 +43,7 @@ const MainStack = createStackNavigator(
 
 const NoCardStack = createStackNavigator(
   {
-    Home: {
-      screen: NoCardScreen,
-      headerMode: 'none',
-      header: null,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    Home: NoCardScreen,
     Add: AddCardScreen,
     Help: InstructionsScreen,
   },
