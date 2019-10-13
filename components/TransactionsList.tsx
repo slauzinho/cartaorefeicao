@@ -33,8 +33,6 @@ const TransactionsList = () => {
     );
   }, [activeCard]);
 
-  console.log(loading, dataSource, error);
-
   if (error) {
     return <Error />;
   }

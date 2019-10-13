@@ -8,16 +8,15 @@ import { useSelector } from 'react-redux';
 import Header from './Header';
 import CardCarousel from './CardCarousel';
 import TransactionsList from './TransactionsList';
-import { Card, AppState } from '../types';
+import { AppState } from '../types';
 
 const PARALLAX_HEADER_HEIGHT = 350;
 const STICKY_HEADER_HEIGHT = 50;
 
 const Parallax = props => {
   const { navigation } = props;
-  const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
-  const activeIndex = useSelector<AppState, number>(
-    state => state.index.activeIndex
+  const activeCardColor = useSelector<AppState, string>(
+    state => state.cards.cards[state.index.activeIndex].cardColor
   );
   const saldo = useSelector<AppState, string>(state => state.index.saldo);
   return (
@@ -34,7 +33,7 @@ const Parallax = props => {
         )}
         renderForeground={() => (
           <Header saldo={saldo}>
-            <CardCarousel cards={cards} />
+            <CardCarousel />
           </Header>
         )}
       >
@@ -47,7 +46,7 @@ const Parallax = props => {
           raised
           name="plus"
           type="entypo"
-          color={cards[activeIndex].cardColor}
+          color={activeCardColor}
           reverse
           onPress={() => navigation.navigate('Add')}
         />
