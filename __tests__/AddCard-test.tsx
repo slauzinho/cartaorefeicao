@@ -14,7 +14,6 @@ import { mocked } from 'ts-jest/utils';
 import { Button } from 'react-native-elements';
 import { addCardRequest } from '../actions';
 import { Picker } from 'react-native';
-import { act } from 'react-test-renderer';
 import CreditCard from '../components/CreditCard';
 
 jest.mock('../utilities/login');
