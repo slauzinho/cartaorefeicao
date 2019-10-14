@@ -4,12 +4,11 @@ import {
   Text,
   View,
   Image,
-  AsyncStorage,
   Picker,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import { Input, Button, Badge } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -51,26 +50,26 @@ const AddCard: FunctionComponent<NavigationInjectedProps> = props => {
         dispatch(addCardRequest(card));
         props.navigation.navigate('Loading');
       } catch (error) {
-        setMessage(error);
+        setMessage('Falhou ao tentar fazer login');
         actions.setSubmitting(false);
       }
     }
     if (isNumeric(cardNumber) && email !== '' && tipo === 'edenred') {
       try {
         await loginEdenred(cardNumber, cardPassword, email);
-        AsyncStorage.setItem(
+        const card = {
           cardNumber,
-          JSON.stringify({
-            cardNumber,
-            cardPassword,
-            tipo,
-            cardName,
-            cardColor,
-            email,
-          })
-        ).then(() => props.navigation.navigate('Loading'));
+          cardPassword,
+          tipo,
+          cardName,
+          cardColor,
+          email,
+        };
+        dispatch(addCardRequest(card));
+        props.navigation.navigate('Loading');
       } catch (error) {
-        setMessage(error);
+        setMessage('Falhou ao tentar fazer login');
+        actions.setSubmitting(false);
       }
     }
     actions.setSubmitting(false);
@@ -112,22 +111,27 @@ const AddCard: FunctionComponent<NavigationInjectedProps> = props => {
               <View style={styles.circles}>
                 <TouchableOpacity
                   style={[styles.circle, { backgroundColor: '#F57A7A' }]}
+                  testID="pinkColorBtn"
                   onPress={() => handleChange('cardColor')('#F57A7A')}
                 />
                 <TouchableOpacity
                   style={[styles.circle, { backgroundColor: '#5CB15A' }]}
+                  testID="greenColorBtn"
                   onPress={() => handleChange('cardColor')('#5CB15A')}
                 />
                 <TouchableOpacity
                   style={[styles.circle, { backgroundColor: '#2D5B99' }]}
+                  testID="blueColorBtn"
                   onPress={() => handleChange('cardColor')('#2D5B99')}
                 />
                 <TouchableOpacity
                   style={[styles.circle, { backgroundColor: '#F0C41B' }]}
+                  testID="yellowColorBtn"
                   onPress={() => handleChange('cardColor')('#F0C41B')}
                 />
                 <TouchableOpacity
                   style={[styles.circle, { backgroundColor: '#A3A3A3' }]}
+                  testID="greyColorBtn"
                   onPress={() => handleChange('cardColor')('#A3A3A3')}
                 />
               </View>
@@ -210,22 +214,11 @@ const AddCard: FunctionComponent<NavigationInjectedProps> = props => {
                     alignItems: 'center',
                   }}
                 >
-                  <Badge
-                    containerStyle={{
-                      backgroundColor: 'red',
-                      width: 150,
-                      marginBottom: 10,
-                    }}
-                  >
-                    <Text style={{ color: 'white' }}>{message}</Text>
-                  </Badge>
-                  <Badge>
-                    <Text style={{ color: 'white' }}>
-                      Se estiveres com dificuldades a adicionar um cartão
-                      consulta as instruções através do icon no topo superior
-                      direito
-                    </Text>
-                  </Badge>
+                  <Text style={{ color: 'red' }}>{message}</Text>
+                  <Text style={{ color: 'red' }}>
+                    Se estiveres com dificuldades a adicionar um cartão consulta
+                    as instruções através do icon no topo superior direito
+                  </Text>
                 </View>
               ) : null}
               <Button
