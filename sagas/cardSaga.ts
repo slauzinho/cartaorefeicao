@@ -9,7 +9,6 @@ import {
 import api from '../api';
 import {
   FetchSiteRequest,
-  CardActionTypes,
   RemoveCardRequest,
   AddCardRequest,
 } from '../actions/types';
