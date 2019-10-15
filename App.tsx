@@ -4,7 +4,6 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { createStackNavigator } from 'react-navigation-stack';
-import { logger } from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import Parallax from './components/Parallax';
 import InstructionsScreen from './screens/InstructionsScreen';
@@ -16,9 +15,17 @@ import reducer from './reducers';
 import { rootSaga } from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
+
+let middleware = [sagaMiddleware];
+
+if (process.env.NODE_ENV === 'development') {
+  let logger = require('redux-logger');
+  middleware = [...middleware, logger];
+}
+
 const store = createStore(
   reducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware, logger))
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 
 sagaMiddleware.run(rootSaga);
