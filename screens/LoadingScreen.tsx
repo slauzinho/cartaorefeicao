@@ -11,8 +11,6 @@ const LoadingScreen: FunctionComponent<NavigationInjectedProps> = props => {
   const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
   const loading = useSelector<AppState, boolean>(state => state.cards.loading);
 
-  console.log('LOADING?!?!', loading);
-
   useEffect(() => {
     dispatch(fetchCardsRequest());
   }, []);
