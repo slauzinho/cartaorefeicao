@@ -4,14 +4,10 @@ import { loginEdenred, loginSantander } from '../utilities';
 const fetchAllCardsFromStorage = async () => {
   const keys = await AsyncStorage.getAllKeys();
   return Promise.all(
-    keys.map(key =>
-      AsyncStorage.getItem(key, (error, result) => {
-        if (error) {
-          throw error;
-        }
-        return result;
-      })
-    )
+    keys.map(async key => {
+      const result = await AsyncStorage.getItem(key);
+      return result;
+    })
   );
 };
 
