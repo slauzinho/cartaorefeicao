@@ -4,6 +4,7 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '^.+\\.tsx?$': 'ts-jest',
   },
+  setupFiles: ['./jestSetupFile.js'],
   testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
   moduleFileExtensions: ['js', 'ts', 'tsx', 'json'],
   globals: {
