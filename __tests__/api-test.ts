@@ -1,4 +1,4 @@
-import MockStorage from '../__mocks__/MockStorage';
+import MockStorage from '../__mocks__/mockStorage';
 import api from '../api';
 import fakeStoredItems from '../utilities/tests/cards';
 
