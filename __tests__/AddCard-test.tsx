@@ -7,14 +7,15 @@ import {
 } from 'react-native-testing-library';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { mocked } from 'ts-jest/utils';
+import { Button } from 'react-native-elements';
+import { Picker } from 'react-native';
+import CreditCard from '../components/CreditCard';
+import { addCardRequest } from '../actions';
+import Modal from 'react-native-modal';
 import AddCard from '../components/AddCard';
 import reducer from '../reducers';
 import { loginEdenred, loginSantander } from '../utilities/login';
-import { mocked } from 'ts-jest/utils';
-import { Button } from 'react-native-elements';
-import { addCardRequest } from '../actions';
-import { Picker } from 'react-native';
-import CreditCard from '../components/CreditCard';
 
 jest.mock('../utilities/login');
 jest.mock('../actions');
@@ -175,5 +176,39 @@ describe('AddCard', () => {
     expect(getByType(CreditCard).props.bgColor).toBe('#F0C41B');
     fireEvent.press(getByTestId('greyColorBtn'));
     expect(getByType(CreditCard).props.bgColor).toBe('#A3A3A3');
+  });
+
+  it('flips card when user focus inputs', () => {
+    const props = createTestProps();
+    const { getByText, getByType } = renderWithRedux(
+      <AddCard {...(props as any)} />
+    );
+    fireEvent(getByText('Numero cartão'), 'onFocus');
+    expect(getByType(CreditCard).props.focused).toBe(false);
+    fireEvent(getByText('CSV'), 'onFocus');
+    expect(getByType(CreditCard).props.focused).toBe(true);
+    fireEvent(getByText('Nome do cartão'), 'onFocus');
+    expect(getByType(CreditCard).props.focused).toBe(false);
+  });
+
+  it('opens the additional info modal', () => {
+    const props = createTestProps();
+    const { getByType, getByTestId } = renderWithRedux(
+      <AddCard {...(props as any)} />
+    );
+
+    fireEvent.press(getByTestId('openModalBtn'));
+    expect(getByType(Modal).props.isVisible).toBe(true);
+  });
+
+  it('can close the modal after is open', () => {
+    const props = createTestProps();
+    const { getByType, getByTestId } = renderWithRedux(
+      <AddCard {...(props as any)} />
+    );
+
+    fireEvent.press(getByTestId('openModalBtn'));
+    getByType(Modal).props.onBackdropPress();
+    expect(getByType(Modal).props.isVisible).toBe(false);
   });
 });

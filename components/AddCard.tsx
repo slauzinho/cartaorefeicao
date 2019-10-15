@@ -186,6 +186,7 @@ const AddCard: FunctionComponent<NavigationInjectedProps> = props => {
                       name="info-circle"
                       size={24}
                       color="grey"
+                      testID="openModalBtn"
                       onPress={() => setVisible(true)}
                     />
                   }

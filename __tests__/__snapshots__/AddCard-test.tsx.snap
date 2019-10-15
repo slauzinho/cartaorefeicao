@@ -479,6 +479,7 @@ exports[`AddCard renders the screen correctly 1`] = `
                     Object {},
                   ]
                 }
+                testID="openModalBtn"
               >
                 
               </Text>
