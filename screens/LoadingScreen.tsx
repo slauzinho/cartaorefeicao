@@ -6,26 +6,26 @@ import { AppState, Card } from '../types';
 import { fetchCardsRequest } from '../actions';
 
 const LoadingScreen: FunctionComponent<NavigationInjectedProps> = props => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
-  const loading = useSelector<AppState, boolean>(state => state.cards.loading);
+    const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
+    const loading = useSelector<AppState, boolean>(state => state.cards.loading);
 
-  useEffect(() => {
-    dispatch(fetchCardsRequest());
-  }, []);
+    useEffect(() => {
+        dispatch(fetchCardsRequest());
+    }, [dispatch]);
 
-  useEffect(() => {
-    if (!loading) {
-      if (cards.length > 0) {
-        props.navigation.navigate('Home');
-      } else {
-        props.navigation.navigate('EmptyState');
-      }
-    }
-  }, [cards, loading]);
+    useEffect(() => {
+        if (!loading) {
+            if (cards.length > 0) {
+                props.navigation.navigate('Home');
+            } else {
+                props.navigation.navigate('EmptyState');
+            }
+        }
+    }, [cards, loading, props.navigation]);
 
-  return <ActivityIndicator size="large" color="grey" />;
+    return <ActivityIndicator size="large" color="grey" />;
 };
 
 export default LoadingScreen;

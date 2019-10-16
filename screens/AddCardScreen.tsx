@@ -5,25 +5,23 @@ import { TouchableOpacity } from 'react-native';
 import AddCard from '../components/AddCard';
 
 interface NavStateParams {
-  otherParam?: string;
+    otherParam?: string;
 }
 
 const AddCardScreen: NavigationScreenComponent<any, NavStateParams> = props => {
-  return <AddCard navigation={props.navigation} />;
+    return <AddCard navigation={props.navigation} />;
 };
 
 AddCardScreen.navigationOptions = ({ navigation }) => ({
-  title: navigation.state.params
-    ? navigation.state.params.otherParam
-    : 'Adicionar cartão',
-  headerStyle: {
-    paddingRight: 20,
-  },
-  headerRight: (
-    <TouchableOpacity onPress={() => navigation.navigate('Help')}>
-      <AntDesign size={28} name="infocirlceo" style={{ color: 'black' }} />
-    </TouchableOpacity>
-  ),
+    title: navigation.state.params ? navigation.state.params.otherParam : 'Adicionar cartão',
+    headerStyle: {
+        paddingRight: 20,
+    },
+    headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('Help')}>
+            <AntDesign size={28} name="infocirlceo" style={{ color: 'black' }} />
+        </TouchableOpacity>
+    ),
 });
 
 export default AddCardScreen;

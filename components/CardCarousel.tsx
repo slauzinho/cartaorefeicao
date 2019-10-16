@@ -8,40 +8,38 @@ import { AppState, Card } from '../types';
 import CarouselItem from './CarouselItem';
 
 const CardCarousel = () => {
-  const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
-  const activeIndex = useSelector<AppState, number>(
-    state => state.index.activeIndex
-  );
-  const dispatch = useDispatch();
-  const pagination = () => (
-    <Pagination
-      dotsLength={cards.length}
-      activeDotIndex={activeIndex}
-      containerStyle={{ backgroundColor: 'white' }}
-      dotStyle={{
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        marginHorizontal: 8,
-        backgroundColor: 'rgba(0, 0, 0, 0.92)',
-      }}
-      inactiveDotOpacity={0.4}
-      inactiveDotScale={0.6}
-    />
-  );
+    const cards = useSelector<AppState, Card[]>(state => state.cards.cards);
+    const activeIndex = useSelector<AppState, number>(state => state.index.activeIndex);
+    const dispatch = useDispatch();
+    const pagination = () => (
+        <Pagination
+            dotsLength={cards.length}
+            activeDotIndex={activeIndex}
+            containerStyle={{ backgroundColor: 'white' }}
+            dotStyle={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                marginHorizontal: 8,
+                backgroundColor: 'rgba(0, 0, 0, 0.92)',
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+        />
+    );
 
-  return (
-    <View>
-      <Carousel
-        data={cards}
-        renderItem={({ item }: { item: Card }) => <CarouselItem item={item} />}
-        sliderWidth={350}
-        itemWidth={300}
-        onSnapToItem={index => dispatch(changeActiveIndex(index))}
-      />
-      {pagination()}
-    </View>
-  );
+    return (
+        <View>
+            <Carousel
+                data={cards}
+                renderItem={({ item }: { item: Card }) => <CarouselItem item={item} />}
+                sliderWidth={350}
+                itemWidth={300}
+                onSnapToItem={index => dispatch(changeActiveIndex(index))}
+            />
+            {pagination()}
+        </View>
+    );
 };
 
 export default withNavigation(CardCarousel);
