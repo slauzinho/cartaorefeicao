@@ -1,11 +1,11 @@
-import React, { useEffect, FunctionComponent } from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavigationInjectedProps } from 'react-navigation';
 import { AppState, Card } from '../types';
 import { fetchCardsRequest } from '../actions';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-const LoadingScreen: FunctionComponent<NavigationInjectedProps> = props => {
+const LoadingScreen: NavigationStackScreenComponent = props => {
     const dispatch = useDispatch();
 
     const cards = useSelector<AppState, Card[]>(state => state.cards.cards);

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet, Image, Picker, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
+import { useState } from 'react';
 
-const StanderInstructions = () => (
+const StanderInstructions: FunctionComponent = () => (
     <View>
         <Card>
             <Text>Não é necessário qualquer registo.</Text>
@@ -19,7 +21,7 @@ const StanderInstructions = () => (
     </View>
 );
 
-const EdenRedInstructions = () => (
+const EdenRedInstructions: FunctionComponent = () => (
     <View>
         <Card>
             <Text>Recentemente a Edenred mudou a forma de consulta dos seus cartões.</Text>
@@ -45,38 +47,37 @@ const EdenRedInstructions = () => (
     </View>
 );
 
-class InstructionsScreen extends React.Component {
-    state = {
-        active: 'santander',
-    };
+type Params = { otherParam?: string };
 
-    static navigationOptions = ({ navigation }) => ({
-        title: navigation.state.params ? navigation.state.params.otherParam : 'Instruções:',
-    });
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <ScrollView>
-                    <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-                        <View style={styles.containerCards}>
-                            <Picker
-                                selectedValue={this.state.active}
-                                style={{ height: 50, width: 300 }}
-                                onValueChange={itemValue => this.setState({ active: itemValue })}
-                                itemStyle={{ fontWeight: 'bold', fontSize: 300, color: 'blue' }}
-                            >
-                                <Picker.Item label="Santander" value="santander" />
-                                <Picker.Item label="Edenred" value="edenred" />
-                            </Picker>
-                        </View>
-                        {this.state.active === 'santander' ? <StanderInstructions /> : <EdenRedInstructions />}
+const InstructionsScreen: NavigationStackScreenComponent<Params> = () => {
+    const [active, setActive] = useState('santander');
+    return (
+        <View style={styles.container}>
+            <ScrollView>
+                <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+                    <View style={styles.containerCards}>
+                        <Picker
+                            selectedValue={active}
+                            style={{ height: 50, width: 300 }}
+                            onValueChange={setActive}
+                            itemStyle={{ fontWeight: 'bold', fontSize: 300, color: 'blue' }}
+                        >
+                            <Picker.Item label="Santander" value="santander" />
+                            <Picker.Item label="Edenred" value="edenred" />
+                        </Picker>
                     </View>
-                </ScrollView>
-            </View>
-        );
-    }
-}
+                    {active === 'santander' ? <StanderInstructions /> : <EdenRedInstructions />}
+                </View>
+            </ScrollView>
+        </View>
+    );
+};
+
+InstructionsScreen.navigationOptions = ({ navigation }) => ({
+    title: navigation.state.params ? navigation.state.params.otherParam : 'Instruções:',
+});
+
+export default InstructionsScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -90,5 +91,3 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
 });
-
-export default InstructionsScreen;

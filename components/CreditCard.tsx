@@ -3,7 +3,7 @@ import FlipCard from 'react-native-flip-card';
 import { View, Text, StyleSheet, Image, ViewStyle } from 'react-native';
 import { FunctionComponent } from 'react';
 
-interface IProps {
+interface Props {
     number: number | string;
     cvc: string;
     nome: string;
@@ -13,7 +13,7 @@ interface IProps {
     cardStyle?: ViewStyle;
 }
 
-const CreditCard: FunctionComponent<IProps> = props => {
+const CreditCard: FunctionComponent<Props> = props => {
     const cvc = () => {
         if (!props.cvc) {
             return '•••';

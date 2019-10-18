@@ -2,11 +2,11 @@ import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { material } from 'react-native-typography';
 
-interface Iprops {
+interface Props {
     saldo: string;
 }
 
-const Header: FunctionComponent<Iprops> = props => (
+const Header: FunctionComponent<Props> = props => (
     <View style={styles.header}>
         <View style={{ flex: 1 }}>{props.children}</View>
         <View style={styles.textContainer}>

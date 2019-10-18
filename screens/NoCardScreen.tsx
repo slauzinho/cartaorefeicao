@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 import { material } from 'react-native-typography';
-import { NavigationInjectedProps } from 'react-navigation';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-const NoCardScreen: FunctionComponent<NavigationInjectedProps> = props => (
+const NoCardScreen: NavigationStackScreenComponent = props => (
     <View style={styles.container}>
         <Image source={require('../assets/images/nocc.png')} style={styles.image} />
         <Text style={[material.title, styles.infoMessage]}>{'Não tem nenhum cartão guardado.'}</Text>

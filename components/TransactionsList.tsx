@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FunctionComponent } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Row from './Row';
@@ -10,7 +10,7 @@ const _keyExtractor = (item: Transaction) => item.description + item.value + ite
 
 const _renderItem = ({ item }) => <Row {...item} />;
 
-const TransactionsList = () => {
+const TransactionsList: FunctionComponent = () => {
     const error = useSelector<AppState, string>(state => state.index.error);
     const loading = useSelector<AppState, boolean>(state => state.index.loading);
     const dataSource = useSelector<AppState, Transaction[]>(state => state.index.transactions);

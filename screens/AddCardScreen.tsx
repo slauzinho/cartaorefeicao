@@ -1,14 +1,14 @@
 import React from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { NavigationScreenComponent } from 'react-navigation';
 import { TouchableOpacity } from 'react-native';
 import AddCard from '../components/AddCard';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 interface NavStateParams {
     otherParam?: string;
 }
 
-const AddCardScreen: NavigationScreenComponent<any, NavStateParams> = props => {
+const AddCardScreen: NavigationStackScreenComponent<NavStateParams, {}> = props => {
     return <AddCard navigation={props.navigation} />;
 };
 

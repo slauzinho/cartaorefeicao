@@ -2,8 +2,12 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { View, Button, Image } from 'react-native';
 import { removeCardRequest } from '../actions';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
+import { Card } from '../types';
 
-const ModalScreen = props => {
+type Params = { item: Card };
+
+const ModalScreen: NavigationStackScreenComponent<Params> = props => {
     const dispatch = useDispatch();
     const deleteItem = (item, navigation) => {
         dispatch(removeCardRequest(item.cardNumber));

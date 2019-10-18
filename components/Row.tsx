@@ -2,14 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { material } from 'react-native-typography';
+import { FunctionComponent } from 'react';
 
-interface IProps {
+interface Props {
     value: string;
     description: string;
     date: string;
 }
 
-const Row = (props: IProps) => (
+const Row: FunctionComponent<Props> = props => (
     <View style={styles.container}>
         <View style={{ flex: 0.1 }}>
             <Icon

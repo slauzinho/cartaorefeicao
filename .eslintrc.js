@@ -27,5 +27,6 @@ module.exports = {
         'no-use-before-define': 0,
         'react/jsx-filename-extension': 0,
         '@typescript-eslint/no-var-requires': 0,
+        'react-native/no-inline-styles': 0,
     },
 };
