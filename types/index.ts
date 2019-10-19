@@ -12,7 +12,7 @@ export interface IndexState {
     saldo: string;
     transactions: Transaction[];
     loading: boolean;
-    error: string;
+    error: string | null;
 }
 
 export interface CardState {
