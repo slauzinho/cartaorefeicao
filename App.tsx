@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { createStackNavigator } from 'react-navigation-stack';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import logger from 'redux-logger';
 import Parallax from './components/Parallax';
 import InstructionsScreen from './screens/InstructionsScreen';
 import ModalScreen from './screens/ModalScreen';
@@ -16,88 +17,78 @@ import { rootSaga } from './rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
-let middleware = [sagaMiddleware];
-
-if (process.env.NODE_ENV === 'development') {
-  let logger = require('redux-logger');
-  middleware = [...middleware, logger];
-}
-
-const store = createStore(
-  reducer,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
+const store = createStore(reducer, composeWithDevTools(applyMiddleware(sagaMiddleware, logger)));
 
 sagaMiddleware.run(rootSaga);
 
 const MainStack = createStackNavigator(
-  {
-    Home: Parallax,
-    Add: AddCardScreen,
-    Help: InstructionsScreen,
-  },
-  {
-    initialRouteName: 'Home',
-    headerMode: 'screen',
-    cardStyle: {
-      backgroundColor: 'white',
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
+    {
+        Home: Parallax,
+        Add: AddCardScreen,
+        Help: InstructionsScreen,
     },
-  }
+    {
+        initialRouteName: 'Home',
+        headerMode: 'screen',
+        cardStyle: {
+            backgroundColor: 'white',
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+        },
+    },
 );
 
 const NoCardStack = createStackNavigator(
-  {
-    Home: NoCardScreen,
-    Add: AddCardScreen,
-    Help: InstructionsScreen,
-  },
-  {
-    initialRouteName: 'Home',
-    headerMode: 'screen',
-    cardStyle: {
-      backgroundColor: 'white',
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
+    {
+        Home: NoCardScreen,
+        Add: AddCardScreen,
+        Help: InstructionsScreen,
     },
-  }
+    {
+        initialRouteName: 'Home',
+        headerMode: 'screen',
+        cardStyle: {
+            backgroundColor: 'white',
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+        },
+    },
 );
 
 const RootStack = createStackNavigator(
-  {
-    Main: {
-      screen: MainStack,
+    {
+        Main: {
+            screen: MainStack,
+        },
+        MyModal: {
+            screen: ModalScreen,
+        },
     },
-    MyModal: {
-      screen: ModalScreen,
+    {
+        mode: 'modal',
+        headerMode: 'none',
     },
-  },
-  {
-    mode: 'modal',
-    headerMode: 'none',
-  }
 );
 
 const AppContainer = createAppContainer(
-  createSwitchNavigator(
-    {
-      Loading: LoadingScreen,
-      App: RootStack,
-      EmptyState: NoCardStack,
-    },
-    {
-      initialRouteName: 'Loading',
-    }
-  )
+    createSwitchNavigator(
+        {
+            Loading: LoadingScreen,
+            App: RootStack,
+            EmptyState: NoCardStack,
+        },
+        {
+            initialRouteName: 'Loading',
+        },
+    ),
 );
 
 const App = () => (
-  <Provider store={store}>
-    <AppContainer />
-  </Provider>
+    <Provider store={store}>
+        <AppContainer />
+    </Provider>
 );
 
 export default App;
